@@ -2,11 +2,11 @@ import datetime
 from .models import CarBrand,CarModel
 from django.shortcuts import render
 from django.http import JsonResponse
-from .constants import TYPES,REGIONS
+from .constants import TYPES,REGIONS,COLORS
 
 def main_view(request):
     brands=CarBrand.objects.all()
-    context={'types':TYPES,'regions':REGIONS,'ranges':range(1900,datetime.date.today().year+1),'brands':brands}
+    context={'types':TYPES,'regions':REGIONS,'ranges':range(1900,datetime.date.today().year+1),'brands':brands,'colors':COLORS}
     return render(request,'main/index.html',context=context)
 
 def get_models(request,slug):

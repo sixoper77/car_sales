@@ -168,11 +168,9 @@
                                     <span class="material-icons">expand_more</span>
                                 </button>
                                 <div class="dropdown-content">
-                                    <div class="dropdown-item" data-value="white">Білий</div>
-                                    <div class="dropdown-item" data-value="black">Чорний</div>
-                                    <div class="dropdown-item" data-value="silver">Сірий</div>
-                                    <div class="dropdown-item" data-value="red">Червоний</div>
-                                    <div class="dropdown-item" data-value="blue">Синій</div>
+                                    {% for _,color in colors  %}
+                                        <div class="dropdown-item" data-value="{{color}}">{{color}}</div>
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>

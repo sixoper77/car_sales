@@ -3,7 +3,6 @@ from django.db import models
 from django.urls import reverse
 from django.conf import settings
 from django.core.validators import MinValueValidator,MaxValueValidator
-from django.utils.text import slugify
 from . constants import *
 
 class Category(models.Model):
@@ -61,6 +60,7 @@ class Cars(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     discount = models.DecimalField(default=0.00, max_digits=4, decimal_places=2)
+    color=models.CharField(max_length=255,choices=COLORS,verbose_name='Кольори',blank=True,null=True)
     image = models.ImageField(upload_to="products/%Y/%m/%d", blank=True)
     
     class Meta:
