@@ -1,0 +1,439 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}AutoSale - Купівля та продаж автомобілів{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <div class="hero-text">
+            <h1>Знайдіть свій ідеальний автомобіль</h1>
+            <p>Найбільший вибір вживаних та нових автомобілів в Україні</p>
+        </div>
+        
+        <!-- Search Filters -->
+        <div class="search-card">
+            <form id="filterForm" class="filter-form">
+                <!-- Main Filters Row -->
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <div class="dropdown">
+                            <button type="button" class="dropdown-button">
+                                <span class="dropdown-text">Легкові</span>
+                                <span class="material-icons">expand_more</span>
+                            </button>
+                            <div class="dropdown-content">
+                                {% for _,type in types %}
+                                    <div class="dropdown-item" data-value="{{ type }}">{{type}}</div>
+                                {% endfor %}
+                                
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <div class="dropdown">
+                            <button type="button" class="dropdown-button">
+                                <span class="dropdown-text">Регіон</span>
+                                <span class="material-icons">expand_more</span>
+                            </button>
+                            <div class="dropdown-content">
+                                {% for _,region in regions  %}
+                                    <div class="dropdown-item" data-value="{{region}}">{{region}}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <div class="dropdown" id="brandDropdown">
+                            <button type="button" class="dropdown-button">
+                                <span class="dropdown-text">Марка</span>
+                                <span class="material-icons">expand_more</span>
+                            </button>
+                            <div class="dropdown-content">
+                                {% for brand in brands %}
+                                    <div class="dropdown-item brand-item" data-slug="{{brand.slug}}" data-value="{{brand.brand}}">{{brand.brand}}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <div class="dropdown" id="modelDropdown">
+                            <button type="button" class="dropdown-button">
+                                <span class="dropdown-text">Модель</span>
+                                <span class="material-icons">expand_more</span>
+                            </button>
+                            <div class="dropdown-content" id="models">
+                                <div class="dropdown-item" data-value="">Оберіть спочатку марку</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Second Row -->
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <div class="dropdown">
+                            <button type="button" class="dropdown-button">
+                                <span class="dropdown-text">Рік випуску</span>
+                                <span class="material-icons">expand_more</span>
+                            </button>
+                            <div class="dropdown-content">
+                                {% for i in ranges  %}
+                                    <div class="dropdown-item" data-value="{{i}}">{{i}}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-group price-group">
+                        <div class="price-inputs">
+                            <input type="number" placeholder="Ціна від" class="price-input">
+                            <span class="price-separator">—</span>
+                            <input type="number" placeholder="до" class="price-input">
+                            <span class="currency">$</span>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <button type="button" class="btn-text" id="advancedToggle">
+                            Розширений пошук
+                            <span class="material-icons">expand_more</span>
+                        </button>
+                    </div>
+                    
+                    <div class="filter-group search-group">
+                        <button type="submit" class="btn-primary search-btn">
+                            <span class="material-icons">search</span>
+                            Пошук
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Advanced Filters -->
+                <div class="advanced-filters" id="advancedFilters">
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <div class="dropdown">
+                                <button type="button" class="dropdown-button">
+                                    <span class="dropdown-text">Коробка передач</span>
+                                    <span class="material-icons">expand_more</span>
+                                </button>
+                                <div class="dropdown-content">
+                                    <div class="dropdown-item" data-value="manual">Механічна</div>
+                                    <div class="dropdown-item" data-value="automatic">Автоматична</div>
+                                    <div class="dropdown-item" data-value="cvt">Варіатор</div>
+                                    <div class="dropdown-item" data-value="robot">Робот</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <div class="dropdown">
+                                <button type="button" class="dropdown-button">
+                                    <span class="dropdown-text">Тип палива</span>
+                                    <span class="material-icons">expand_more</span>
+                                </button>
+                                <div class="dropdown-content">
+                                    <div class="dropdown-item" data-value="petrol">Бензин</div>
+                                    <div class="dropdown-item" data-value="diesel">Дизель</div>
+                                    <div class="dropdown-item" data-value="hybrid">Гібрид</div>
+                                    <div class="dropdown-item" data-value="electric">Електро</div>
+                                    <div class="dropdown-item" data-value="gas">Газ</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <div class="dropdown">
+                                <button type="button" class="dropdown-button">
+                                    <span class="dropdown-text">Привід</span>
+                                    <span class="material-icons">expand_more</span>
+                                </button>
+                                <div class="dropdown-content">
+                                    <div class="dropdown-item" data-value="front">Передній</div>
+                                    <div class="dropdown-item" data-value="rear">Задній</div>
+                                    <div class="dropdown-item" data-value="all">Повний</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <div class="dropdown">
+                                <button type="button" class="dropdown-button">
+                                    <span class="dropdown-text">Колір</span>
+                                    <span class="material-icons">expand_more</span>
+                                </button>
+                                <div class="dropdown-content">
+                                    <div class="dropdown-item" data-value="white">Білий</div>
+                                    <div class="dropdown-item" data-value="black">Чорний</div>
+                                    <div class="dropdown-item" data-value="silver">Сірий</div>
+                                    <div class="dropdown-item" data-value="red">Червоний</div>
+                                    <div class="dropdown-item" data-value="blue">Синій</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Section -->
+<section class="featured-section">
+    <div class="container">
+        <h2>Рекомендовані авто</h2>
+        <div class="cars-grid">
+            <!-- Car Card 1 -->
+            <div class="car-card">
+                <div class="car-image">
+                    <div class="placeholder-image">
+                        <span class="material-icons">directions_car</span>
+                    </div>
+                    <div class="car-badge">ТОП</div>
+                </div>
+                <div class="car-info">
+                    <h3>Toyota Camry</h3>
+                    <p class="car-details">2020 • 2.5 л • Автомат • 45,000 км</p>
+                    <p class="car-price">$18,500</p>
+                    <div class="car-location">
+                        <span class="material-icons">location_on</span>
+                        Київ
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Car Card 2 -->
+            <div class="car-card">
+                <div class="car-image">
+                    <div class="placeholder-image">
+                        <span class="material-icons">directions_car</span>
+                    </div>
+                    <div class="car-badge new">НОВЕ</div>
+                </div>
+                <div class="car-info">
+                    <h3>BMW X5</h3>
+                    <p class="car-details">2023 • 3.0 л • Автомат • 15,000 км</p>
+                    <p class="car-price">$45,000</p>
+                    <div class="car-location">
+                        <span class="material-icons">location_on</span>
+                        Харків
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Car Card 3 -->
+            <div class="car-card">
+                <div class="car-image">
+                    <div class="placeholder-image">
+                        <span class="material-icons">directions_car</span>
+                    </div>
+                </div>
+                <div class="car-info">
+                    <h3>Volkswagen Golf</h3>
+                    <p class="car-details">2019 • 1.4 л • Автомат • 67,000 км</p>
+                    <p class="car-price">$12,800</p>
+                    <div class="car-location">
+                        <span class="material-icons">location_on</span>
+                        Дніпро
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Car Card 4 -->
+            <div class="car-card">
+                <div class="car-image">
+                    <div class="placeholder-image">
+                        <span class="material-icons">directions_car</span>
+                    </div>
+                </div>
+                <div class="car-info">
+                    <h3>Mercedes C-Class</h3>
+                    <p class="car-details">2021 • 2.0 л • Автомат • 32,000 км</p>
+                    <p class="car-price">$28,900</p>
+                    <div class="car-location">
+                        <span class="material-icons">location_on</span>
+                        Одеса
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section-actions">
+            <button class="btn-secondary">Переглянути всі авто</button>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section class="services-section">
+    <div class="container">
+        <h2>Наші послуги</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">
+                    <span class="material-icons">verified</span>
+                </div>
+                <h3>Перевірка VIN</h3>
+                <p>Детальна історія автомобіля за VIN-кодом</p>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <span class="material-icons">account_balance</span>
+                </div>
+                <h3>Автокредит</h3>
+                <p>Вигідні умови кредитування на покупку авто</p>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <span class="material-icons">security</span>
+                </div>
+                <h3>Страхування</h3>
+                <p>КАСКО та ОСЦПВ для вашого автомобіля</p>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <span class="material-icons">build</span>
+                </div>
+                <h3>СТО</h3>
+                <p>Перевірений сервіс та ремонт автомобілів</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Обработка кликов для открытия/закрытия dropdown
+        const dropdownButtons = document.querySelectorAll('.dropdown-button');
+        dropdownButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const dropdown = this.parentElement;
+                
+                // Закрыть все другие dropdown
+                document.querySelectorAll('.dropdown').forEach(d => {
+                    if (d !== dropdown) {
+                        d.classList.remove('active');
+                    }
+                });
+                
+                // Переключить текущий dropdown
+                dropdown.classList.toggle('active');
+            });
+        });
+
+        // Закрытие dropdown при клике вне их
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown').forEach(dropdown => {
+                    dropdown.classList.remove('active');
+                });
+            }
+        });
+
+        // Обработка выбора элементов dropdown (кроме марки и модели)
+        document.querySelectorAll('.dropdown-item').forEach(item => {
+            if (!item.classList.contains('brand-item') && item.parentElement.id !== 'models') {
+                item.addEventListener('click', function() {
+                    const dropdown = this.closest('.dropdown');
+                    const dropdownText = dropdown.querySelector('.dropdown-text');
+                    dropdownText.textContent = this.textContent;
+                    dropdown.classList.remove('active');
+                });
+            }
+        });
+
+        // Обработка выбора марки и загрузки моделей
+        const brandItems = document.querySelectorAll(".brand-item");
+        const modelsContainer = document.getElementById("models");
+        const modelDropdownText = document.querySelector("#modelDropdown .dropdown-text");
+        const brandDropdownText = document.querySelector("#brandDropdown .dropdown-text");
+
+        brandItems.forEach(item => {
+            item.addEventListener("click", function() {
+                const brandSlug = this.dataset.slug;
+                const brandName = this.textContent;
+                
+                console.log("Клик по марке:", brandName, "slug:", brandSlug);
+                
+                // Обновляем текст кнопки марки
+                brandDropdownText.textContent = brandName;
+                
+                // Закрываем dropdown марки
+                document.getElementById('brandDropdown').classList.remove('active');
+                
+                // Показываем состояние загрузки
+                modelDropdownText.textContent = "Завантаження...";
+                modelsContainer.innerHTML = '<div class="dropdown-item">Завантаження моделей...</div>';
+
+                fetch(`/get-models/${brandSlug}/`)
+                    .then(response => {
+                        console.log("Статус ответа:", response.status);
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(models => {
+                        console.log("Получено моделей:", models);
+                        modelsContainer.innerHTML = "";
+                        
+                        if (models.length === 0) {
+                            modelsContainer.innerHTML = '<div class="dropdown-item">Немає моделей</div>';
+                            modelDropdownText.textContent = "Немає моделей";
+                        } else {
+                            models.forEach(m => {
+                                const div = document.createElement("div");
+                                div.classList.add("dropdown-item");
+                                div.dataset.value = m.id;
+                                // ИСПРАВЛЕНО: используем m.models вместо m.name
+                                div.textContent = m.models;
+                                
+                                // Добавляем обработчик клика для выбора модели
+                                div.addEventListener('click', function() {
+                                    modelDropdownText.textContent = m.models;
+                                    document.getElementById('modelDropdown').classList.remove('active');
+                                });
+                                
+                                modelsContainer.appendChild(div);
+                            });
+                            modelDropdownText.textContent = "Оберіть модель";
+                        }
+                    })
+                    .catch(err => {
+                        console.error("Ошибка загрузки моделей:", err);
+                        modelsContainer.innerHTML = '<div class="dropdown-item">Помилка завантаження</div>';
+                        modelDropdownText.textContent = "Помилка завантаження";
+                    });
+            });
+        });
+
+        // Обработка кнопки "Розширений пошук"
+        const advancedToggle = document.getElementById('advancedToggle');
+        const advancedFilters = document.getElementById('advancedFilters');
+        
+        if (advancedToggle && advancedFilters) {
+            advancedToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                const icon = this.querySelector('.material-icons');
+                
+                if (advancedFilters.style.display === 'none' || advancedFilters.style.display === '') {
+                    advancedFilters.style.display = 'block';
+                    icon.textContent = 'expand_less';
+                } else {
+                    advancedFilters.style.display = 'none';
+                    icon.textContent = 'expand_more';
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

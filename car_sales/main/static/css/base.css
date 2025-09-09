@@ -1,0 +1,751 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1.6;
+    color: #1a1a1a;
+    background-color: #fafafa;
+}
+
+/* Material Design 3 Colors */
+:root {
+    --md-primary: #6750a4;
+    --md-primary-container: #eaddff;
+    --md-on-primary: #ffffff;
+    --md-secondary: #625b71;
+    --md-secondary-container: #e8def8;
+    --md-tertiary: #7d5260;
+    --md-surface: #ffffff;
+    --md-surface-variant: #e7e0ec;
+    --md-on-surface: #1a1a1a;
+    --md-on-surface-variant: #49454f;
+    --md-outline: #79747e;
+    --md-outline-variant: #cac4d0;
+    --md-error: #ba1a1a;
+    --md-success: #0f6b3c;
+    --md-warning: #e65100;
+    --md-shadow: rgba(0, 0, 0, 0.1);
+    --md-elevation-1: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    --md-elevation-2: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    --md-elevation-3: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+}
+
+/* Container */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* App Bar */
+.app-bar {
+    background: var(--md-surface);
+    box-shadow: var(--md-elevation-2);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.app-bar-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    height: 64px;
+}
+
+.app-bar-left {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--md-primary);
+    font-weight: 500;
+    font-size: 20px;
+}
+
+.logo .material-icons {
+    font-size: 28px;
+}
+
+.app-bar-nav {
+    display: flex;
+    gap: 32px;
+    margin-left: 48px;
+}
+
+.nav-item {
+    text-decoration: none;
+    color: var(--md-on-surface);
+    font-weight: 400;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.nav-item:hover {
+    background: var(--md-primary-container);
+    color: var(--md-primary);
+}
+
+.app-bar-right {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+/* Buttons */
+.btn-primary,
+.btn-secondary,
+.btn-text {
+    border: none;
+    border-radius: 20px;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: var(--md-primary);
+    color: var(--md-on-primary);
+    padding: 10px 24px;
+    box-shadow: var(--md-elevation-1);
+}
+
+.btn-primary:hover {
+    background: #5a47a0;
+    box-shadow: var(--md-elevation-2);
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background: var(--md-surface);
+    color: var(--md-primary);
+    padding: 10px 24px;
+    border: 1px solid var(--md-outline-variant);
+}
+
+.btn-secondary:hover {
+    background: var(--md-primary-container);
+    border-color: var(--md-primary);
+}
+
+.btn-text {
+    background: transparent;
+    color: var(--md-primary);
+    padding: 8px 12px;
+}
+
+.btn-text:hover {
+    background: var(--md-primary-container);
+}
+
+/* Ripple Effect */
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(0);
+    animation: ripple 0.6s linear;
+    pointer-events: none;
+}
+
+@keyframes ripple {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+/* Mobile Menu */
+.mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--md-on-surface);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+}
+
+.mobile-menu-btn:hover {
+    background: var(--md-surface-variant);
+}
+
+.mobile-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--md-surface);
+    box-shadow: var(--md-elevation-2);
+    flex-direction: column;
+    padding: 16px 24px;
+}
+
+.mobile-menu.open {
+    display: flex;
+}
+
+.mobile-nav-item {
+    text-decoration: none;
+    color: var(--md-on-surface);
+    padding: 12px 0;
+    border-bottom: 1px solid var(--md-outline-variant);
+}
+
+.mobile-nav-item:last-of-type {
+    border-bottom: none;
+}
+
+.mobile-menu-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.mobile-btn {
+    width: 100%;
+    justify-content: center;
+}
+
+/* Main Content */
+.main-content {
+    min-height: calc(100vh - 64px);
+}
+
+/* Hero Section */
+.hero {
+    background: linear-gradient(135deg, var(--md-primary-container) 0%, var(--md-surface) 100%);
+    padding: 48px 0;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+}
+
+.hero-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    width: 100%;
+}
+
+.hero-text {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.hero-text h1 {
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--md-on-surface);
+    margin-bottom: 16px;
+    line-height: 1.2;
+}
+
+.hero-text p {
+    font-size: 18px;
+    color: var(--md-on-surface-variant);
+    margin-bottom: 0;
+}
+
+/* Search Card */
+.search-card {
+    background: var(--md-surface);
+    border-radius: 16px;
+    box-shadow: var(--md-elevation-3);
+    padding: 32px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.filter-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.filter-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    align-items: end;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Dropdown Styles */
+.dropdown {
+    position: relative;
+}
+
+.dropdown-button {
+    width: 100%;
+    padding: 16px;
+    background: var(--md-surface);
+    border: 1px solid var(--md-outline-variant);
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-size: 16px;
+    color: var(--md-on-surface);
+    transition: all 0.2s ease;
+}
+
+.dropdown-button:hover {
+    border-color: var(--md-primary);
+    background: var(--md-primary-container);
+}
+
+.dropdown-button:focus {
+    outline: 2px solid var(--md-primary);
+    outline-offset: 2px;
+}
+
+.dropdown.open .dropdown-button {
+    border-color: var(--md-primary);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.dropdown.open .dropdown-button .material-icons {
+    transform: rotate(180deg);
+}
+
+.dropdown-content {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--md-surface);
+    border: 1px solid var(--md-primary);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    box-shadow: var(--md-elevation-2);
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+}
+
+.dropdown.open .dropdown-content {
+    display: block;
+}
+
+.dropdown-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    color: var(--md-on-surface);
+    transition: background 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background: var(--md-primary-container);
+}
+
+/* Price Inputs */
+.price-group {
+    min-width: 250px;
+}
+
+.price-inputs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--md-outline-variant);
+    border-radius: 8px;
+    padding: 4px 12px;
+    background: var(--md-surface);
+}
+
+.price-inputs:hover {
+    border-color: var(--md-primary);
+}
+
+.price-input {
+    border: none;
+    outline: none;
+    padding: 12px 0;
+    font-size: 16px;
+    width: 80px;
+    background: transparent;
+}
+
+.price-separator {
+    color: var(--md-on-surface-variant);
+}
+
+.currency {
+    color: var(--md-on-surface-variant);
+    font-weight: 500;
+}
+
+/* Search Button */
+.search-group {
+    display: flex;
+    align-items: end;
+}
+
+.search-btn {
+    height: 56px;
+    padding: 16px 32px;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/* Advanced Filters */
+.advanced-filters {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.advanced-filters.open {
+    max-height: 200px;
+    padding-top: 20px;
+    border-top: 1px solid var(--md-outline-variant);
+}
+
+/* Featured Section */
+.featured-section {
+    padding: 64px 0;
+    background: var(--md-surface);
+}
+
+.featured-section h2 {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--md-on-surface);
+    text-align: center;
+    margin-bottom: 48px;
+}
+
+/* Cars Grid */
+.cars-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+    margin-bottom: 48px;
+}
+
+.car-card {
+    background: var(--md-surface);
+    border-radius: 16px;
+    box-shadow: var(--md-elevation-1);
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+}
+
+.car-card:hover {
+    box-shadow: var(--md-elevation-3);
+    transform: translateY(-4px);
+}
+
+.car-image {
+    position: relative;
+    height: 200px;
+    background: var(--md-surface-variant);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.placeholder-image {
+    color: var(--md-on-surface-variant);
+}
+
+.placeholder-image .material-icons {
+    font-size: 48px;
+}
+
+.car-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: var(--md-error);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.car-badge.new {
+    background: var(--md-success);
+}
+
+.car-info {
+    padding: 20px;
+}
+
+.car-info h3 {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--md-on-surface);
+    margin-bottom: 8px;
+}
+
+.car-details {
+    color: var(--md-on-surface-variant);
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.car-price {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--md-primary);
+    margin-bottom: 12px;
+}
+
+.car-location {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--md-on-surface-variant);
+    font-size: 14px;
+}
+
+.car-location .material-icons {
+    font-size: 16px;
+}
+
+.section-actions {
+    text-align: center;
+}
+
+/* Services Section */
+.services-section {
+    padding: 64px 0;
+    background: var(--md-primary-container);
+}
+
+.services-section h2 {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--md-on-surface);
+    text-align: center;
+    margin-bottom: 48px;
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+}
+
+.service-card {
+    background: var(--md-surface);
+    border-radius: 16px;
+    padding: 32px 24px;
+    text-align: center;
+    box-shadow: var(--md-elevation-1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.service-card:hover {
+    box-shadow: var(--md-elevation-2);
+    transform: translateY(-2px);
+}
+
+.service-icon {
+    width: 64px;
+    height: 64px;
+    background: var(--md-primary-container);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+}
+
+.service-icon .material-icons {
+    font-size: 32px;
+    color: var(--md-primary);
+}
+
+.service-card h3 {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--md-on-surface);
+    margin-bottom: 12px;
+}
+
+.service-card p {
+    color: var(--md-on-surface-variant);
+    line-height: 1.5;
+}
+
+/* Footer */
+.footer {
+    background: var(--md-secondary);
+    color: var(--md-on-surface);
+    padding: 48px 0 32px;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 32px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.footer-section h3,
+.footer-section h4 {
+    color: white;
+    margin-bottom: 16px;
+}
+
+.footer-section h3 {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.footer-section h4 {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.footer-section p {
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.6;
+}
+
+.footer-section a {
+    display: block;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    margin-bottom: 8px;
+    transition: color 0.2s ease;
+}
+
+.footer-section a:hover {
+    color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .app-bar-nav {
+        display: none;
+    }
+    
+    .app-bar-right {
+        display: none;
+    }
+    
+    .mobile-menu-btn {
+        display: block;
+    }
+    
+    .hero-text h1 {
+        font-size: 36px;
+    }
+    
+    .search-card {
+        padding: 24px 20px;
+        margin: 0 16px;
+    }
+    
+    .filter-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .price-group {
+        min-width: auto;
+    }
+    
+    .price-inputs {
+        flex-wrap: wrap;
+    }
+    
+    .cars-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 16px;
+    }
+    
+    .container {
+        padding: 0 16px;
+    }
+    
+    .featured-section,
+    .services-section {
+        padding: 48px 0;
+    }
+    
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-text h1 {
+        font-size: 28px;
+    }
+    
+    .hero-text p {
+        font-size: 16px;
+    }
+    
+    .search-card {
+        padding: 20px 16px;
+        margin: 0 12px;
+        border-radius: 12px;
+    }
+    
+    .cars-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .services-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Custom Scrollbar */
+.dropdown-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.dropdown-content::-webkit-scrollbar-track {
+    background: var(--md-surface-variant);
+}
+
+.dropdown-content::-webkit-scrollbar-thumb {
+    background: var(--md-outline);
+    border-radius: 3px;
+}
+
+.dropdown-content::-webkit-scrollbar-thumb:hover {
+    background: var(--md-on-surface-variant);
+}

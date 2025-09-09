@@ -1,0 +1,216 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AutoSale - Продаж автомобілів{% endblock %}</title>
+    
+    <!-- Material Design Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- App Bar -->
+    <header class="app-bar">
+        <div class="app-bar-content">
+            <div class="app-bar-left">
+                <div class="logo">
+                    <span class="material-icons">directions_car</span>
+                    <span class="logo-text">AutoSale</span>
+                </div>
+            </div>
+            
+            <nav class="app-bar-nav">
+                <a href="#" class="nav-item">Вживані авто</a>
+                <a href="#" class="nav-item">Нові авто</a>
+                <a href="#" class="nav-item">Новини</a>
+                <a href="#" class="nav-item">Автозапчастини</a>
+            </nav>
+            
+            <div class="app-bar-right">
+                <button class="btn-secondary">
+                    <span class="material-icons">account_circle</span>
+                    Увійти
+                </button>
+                <button class="btn-primary">
+                    <span class="material-icons">add</span>
+                    Продати авто
+                </button>
+            </div>
+            
+            <!-- Mobile Menu Button -->
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <span class="material-icons">menu</span>
+            </button>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="#" class="mobile-nav-item">Вживані авто</a>
+            <a href="#" class="mobile-nav-item">Нові авто</a>
+            <a href="#" class="mobile-nav-item">Новини</a>
+            <a href="#" class="mobile-nav-item">Автозапчастини</a>
+            <div class="mobile-menu-actions">
+                <button class="btn-secondary mobile-btn">
+                    <span class="material-icons">account_circle</span>
+                    Увійти
+                </button>
+                <button class="btn-primary mobile-btn">
+                    <span class="material-icons">add</span>
+                    Продати авто
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>AutoSale</h3>
+                <p>Найкращий сервіс для покупки та продажу автомобілів в Україні</p>
+            </div>
+            <div class="footer-section">
+                <h4>Покупцям</h4>
+                <a href="#">Як купити авто</a>
+                <a href="#">Перевірка VIN</a>
+                <a href="#">Кредит на авто</a>
+            </div>
+            <div class="footer-section">
+                <h4>Продавцям</h4>
+                <a href="#">Як продати авто</a>
+                <a href="#">Розмістити оголошення</a>
+                <a href="#">Тарифи</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        mobileMenuBtn.addEventListener('click', function() {
+            mobileMenu.classList.toggle('open');
+            const icon = this.querySelector('.material-icons');
+            icon.textContent = mobileMenu.classList.contains('open') ? 'close' : 'menu';
+        });
+
+        // Dropdown functionality
+        function initDropdowns() {
+            const dropdowns = document.querySelectorAll('.dropdown');
+            
+            dropdowns.forEach(dropdown => {
+                const button = dropdown.querySelector('.dropdown-button');
+                const content = dropdown.querySelector('.dropdown-content');
+                const items = dropdown.querySelectorAll('.dropdown-item');
+                
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    
+                    // Close other dropdowns
+                    dropdowns.forEach(other => {
+                        if (other !== dropdown) {
+                            other.classList.remove('open');
+                        }
+                    });
+                    
+                    dropdown.classList.toggle('open');
+                });
+                
+                items.forEach(item => {
+                    item.addEventListener('click', () => {
+                        const text = item.textContent;
+                        const buttonText = button.querySelector('.dropdown-text');
+                        buttonText.textContent = text;
+                        dropdown.classList.remove('open');
+                        
+                        // Trigger change event for form handling
+                        button.dispatchEvent(new CustomEvent('dropdown-change', {
+                            detail: { value: item.dataset.value, text: text }
+                        }));
+                    });
+                });
+            });
+            
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', () => {
+                dropdowns.forEach(dropdown => {
+                    dropdown.classList.remove('open');
+                });
+            });
+        }
+
+        // Filter functionality
+        function initFilters() {
+            const filterForm = document.getElementById('filterForm');
+            const advancedToggle = document.getElementById('advancedToggle');
+            const advancedFilters = document.getElementById('advancedFilters');
+            
+            if (advancedToggle && advancedFilters) {
+                advancedToggle.addEventListener('click', () => {
+                    advancedFilters.classList.toggle('open');
+                    const icon = advancedToggle.querySelector('.material-icons');
+                    icon.textContent = advancedFilters.classList.contains('open') ? 'expand_less' : 'expand_more';
+                });
+            }
+            
+            if (filterForm) {
+                filterForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    // Handle form submission
+                    console.log('Filter form submitted');
+                });
+            }
+        }
+
+        // Ripple effect for buttons
+        function addRippleEffect() {
+            const buttons = document.querySelectorAll('.btn-primary, .btn-secondary, .dropdown-button');
+            
+            buttons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    const ripple = document.createElement('span');
+                    ripple.classList.add('ripple');
+                    
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+                    
+                    ripple.style.width = ripple.style.height = size + 'px';
+                    ripple.style.left = x + 'px';
+                    ripple.style.top = y + 'px';
+                    
+                    this.appendChild(ripple);
+                    
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
+        }
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initDropdowns();
+            initFilters();
+            addRippleEffect();
+        });
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
