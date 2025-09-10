@@ -169,7 +169,7 @@
             
             if (filterForm) {
                 filterForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
+                    console.log('Filter form submitted, values:', new URLSearchParams(new FormData(filterForm)).toString());
                     // Handle form submission
                     console.log('Filter form submitted');
                 });
