@@ -28,22 +28,28 @@
             
             <nav class="app-bar-nav">
                 <a href="#" class="nav-item">Вживані авто</a>
+                <a href="{% url 'main:main' %}" class="nav-item">Головна</a>
                 <a href="#" class="nav-item">Нові авто</a>
                 <a href="#" class="nav-item">Новини</a>
-                <a href="#" class="nav-item">Автозапчастини</a>
             </nav>
             
             <div class="app-bar-right">
                 {% if user.is_authenticated %}
-                <button class="btn-secondary">
-                    <span class="material-icons">person</span>
-                    Профіль
-                </button>
-                {% else %}
+                <a href="{% url "users:profile" %}">
                     <button class="btn-secondary">
-                    <span class="material-icons">account_circle</span>
-                    Увійти
-                </button>
+                    <span class="material-icons" >person</span>
+                    Профіль
+                    </button>
+                </a>
+                
+                {% else %}
+                    <a href="{% url 'account_signup' %}">
+                        <button class="btn-secondary">
+                        <span class="material-icons">account_circle</span>
+                        Увійти
+                        </button>
+                    </a>
+                    
                 {% endif %}
                 <button class="btn-primary">
                     <span class="material-icons">add</span>
@@ -62,11 +68,13 @@
             <a href="#" class="mobile-nav-item">Вживані авто</a>
             <a href="#" class="mobile-nav-item">Нові авто</a>
             <a href="#" class="mobile-nav-item">Новини</a>
-            <a href="#" class="mobile-nav-item">Автозапчастини</a>
+            <a href="" class="mobile-nav-item">Автозапчастини</a>
             <div class="mobile-menu-actions">
                 <button class="btn-secondary mobile-btn">
-                    <span class="material-icons">account_circle</span>
-                    Увійти
+                    <a href="{% url 'account_signup' %}">
+                        <span class="material-icons">account_circle</span>
+                        Увійти
+                    </a>
                 </button>
                 <button class="btn-primary mobile-btn">
                     <span class="material-icons">add</span>

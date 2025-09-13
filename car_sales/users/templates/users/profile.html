@@ -1,0 +1,478 @@
+
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Профіль користувача - AutoSale{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/base.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-card">
+        <!-- Success/Error Messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message-alert {{ message.tags }}">
+                    <span class="material-icons">
+                        {% if message.tags == 'success' %}check_circle{% else %}error{% endif %}
+                    </span>
+                    <span>{{ message }}</span>
+                    <button type="button" class="close-btn" onclick="this.parentElement.remove()">
+                        <span class="material-icons">close</span>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Profile Form -->
+        <form method="post" action="{% url 'users:profile' %}" enctype="multipart/form-data" class="profile-form">
+            {% csrf_token %}
+            
+            <!-- Profile Avatar with Upload -->
+            <div class="profile-avatar-section">
+                <div class="profile-avatar">
+                    {% if user.image %}
+                        <img src="{{ user.image.url }}" alt="Фото профілю" class="avatar-image" id="avatarPreview">
+                    {% else %}
+                        <span class="material-icons" id="defaultAvatar">person</span>
+                    {% endif %}
+                    <div class="avatar-overlay">
+                        <span class="material-icons">photo_camera</span>
+                    </div>
+                </div>
+                
+                <div class="avatar-upload">
+                    <input type="file" id="id_image" name="image" accept="image/*" class="file-input">
+                    <label for="id_image" class="file-input-label">
+                        <span class="material-icons">photo_camera</span>
+                        Змінити фото
+                    </label>
+                    {% if form.image.errors %}
+                        <span class="error-message">{{ form.image.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Profile Information Form -->
+            <div class="profile-form-fields">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="id_first_name" class="form-label">Ім'я</label>
+                        <div class="input-container">
+                            <span class="material-icons input-icon">person</span>
+                            <input 
+                                type="text" 
+                                id="id_first_name" 
+                                name="first_name" 
+                                class="form-input"
+                                placeholder="Ваше ім'я"
+                                value="{{ form.first_name.value|default_if_none:'' }}"
+                            >
+                        </div>
+                        {% if form.first_name.errors %}
+                            <span class="error-message">{{ form.first_name.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_last_name" class="form-label">Прізвище</label>
+                        <div class="input-container">
+                            <span class="material-icons input-icon">person</span>
+                            <input 
+                                type="text" 
+                                id="id_last_name" 
+                                name="last_name" 
+                                class="form-input"
+                                placeholder="Ваше прізвище"
+                                value="{{ form.last_name.value|default_if_none:'' }}"
+                            >
+                        </div>
+                        {% if form.last_name.errors %}
+                            <span class="error-message">{{ form.last_name.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="id_username" class="form-label">Ім'я користувача</label>
+                        <div class="input-container">
+                            <span class="material-icons input-icon">alternate_email</span>
+                            <input 
+                                type="text" 
+                                id="id_username" 
+                                name="username" 
+                                class="form-input"
+                                placeholder="Ім'я користувача"
+                                value="{{ form.username.value|default_if_none:'' }}"
+                                required
+                            >
+                        </div>
+                        {% if form.username.errors %}
+                            <span class="error-message">{{ form.username.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_email" class="form-label">Email</label>
+                        <div class="input-container">
+                            <span class="material-icons input-icon">email</span>
+                            <input 
+                                type="email" 
+                                id="id_email" 
+                                name="email" 
+                                class="form-input"
+                                placeholder="Ваша пошта"
+                                value="{{ form.email.value|default_if_none:'' }}"
+                            >
+                        </div>
+                        {% if form.email.errors %}
+                            <span class="error-message">{{ form.email.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Stats -->
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <span class="stat-number">{{ user.car_set.count|default:0 }}</span>
+                    <span class="stat-label">Оголошень</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">{{ user.car_set.sold.count|default:0 }}</span>
+                    <span class="stat-label">Продано</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">{{ user.date_joined|date:"M Y" }}</span>
+                    <span class="stat-label">З нами з</span>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="profile-actions">
+                <div class="action-row">
+                    <button type="submit" class="btn-primary save-btn">
+                        <span class="material-icons">save</span>
+                        Зберегти зміни
+                    </button>
+                    
+                    <a href="" class="btn-secondary">
+                        <span class="material-icons">key</span>
+                        Змінити пароль
+                    </a>
+                </div>
+
+                <div class="action-row">
+                    <a href="" class="btn-secondary">
+                        <span class="material-icons">directions_car</span>
+                        Мої авто
+                    </a>
+                    
+                    <a href="" class="btn-secondary">
+                        <span class="material-icons">favorite</span>
+                        Обрані
+                    </a>
+                </form>
+            </div>
+
+            <!-- Logout Form -->
+            <form method="post" action="{% url 'account_logout' %}" class="logout-form">
+                {% csrf_token %}
+                <button type="submit" class="btn-logout" id="logoutBtn">
+                    <span class="material-icons">logout</span>
+                    Вийти з акаунта
+                </button>
+            </form>
+        </div>
+                
+                <!-- User Cars Section -->
+        {% if user.car_set.exists %}
+        <div class="user-cars-section">
+            <h3 class="section-title">
+                <span class="material-icons">directions_car</span>
+                Ваші оголошення
+            </h3>
+            
+            <div class="cars-preview">
+                {% for car in user.car_set.all|slice:":3" %}
+                <div class="car-preview-card" onclick="location.href='{% url 'cars:detail' car.pk %}'">
+                    <div class="car-preview-image">
+                        {% if car.image %}
+                            <img src="{{ car.image.url }}" alt="{{ car.title }}">
+                        {% else %}
+                            <span class="material-icons">directions_car</span>
+                        {% endif %}
+                    </div>
+                    <div class="car-preview-info">
+                        <h4>{{ car.title }}</h4>
+                        <p class="car-preview-price">${{ car.price|floatformat:0 }}</p>
+                        <p class="car-preview-status">
+                            {% if car.is_sold %}
+                                <span class="badge-sold">Продано</span>
+                            {% else %}
+                                <span class="badge-active">Активне</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            {% if user.car_set.count > 3 %}
+            <div class="cars-more">
+                <a href="" class="btn-text">
+                    Переглянути всі ({{ user.car_set.count }})
+                    <span class="material-icons">arrow_forward</span>
+                </a>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    initProfileFunctionality();
+});
+
+function initProfileFunctionality() {
+    // Image preview
+    initImagePreview();
+    
+    // Form validation
+    initFormValidation();
+    
+    // Logout confirmation
+    initLogoutConfirmation();
+    
+    // Ripple effects
+    initRippleEffects();
+    
+    // Input animations
+    initInputAnimations();
+}
+
+function initImagePreview() {
+    const imageInput = document.getElementById('id_image');
+    const avatarPreview = document.getElementById('avatarPreview');
+    const defaultAvatar = document.getElementById('defaultAvatar');
+    const profileAvatar = document.querySelector('.profile-avatar');
+    
+    if (imageInput) {
+        imageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // Validate file size (5MB limit)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('Файл занадто великий. Максимальний розмір 5MB.');
+                    this.value = '';
+                    return;
+                }
+                
+                // Validate file type
+                if (!file.type.startsWith('image/')) {
+                    alert('Будь ласка, виберіть файл зображення.');
+                    this.value = '';
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    profileAvatar.innerHTML = `
+                        <img src="${e.target.result}" alt="Попередній перегляд" class="avatar-image">
+                        <div class="avatar-overlay">
+                            <span class="material-icons">photo_camera</span>
+                        </div>
+                    `;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+}
+
+function initFormValidation() {
+    const form = document.querySelector('.profile-form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            let isValid = true;
+            
+            // Clear previous errors
+            const jsErrors = document.querySelectorAll('.error-message.js-error');
+            jsErrors.forEach(error => error.remove());
+            
+            // Remove error styling
+            const inputs = form.querySelectorAll('.form-input');
+            inputs.forEach(input => {
+                input.parentElement.classList.remove('error');
+            });
+            
+            // Validate required fields
+            const requiredFields = form.querySelectorAll('input[required]');
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    showFieldError(field, 'Це поле обов\'язкове');
+                    isValid = false;
+                }
+            });
+            
+            // Validate username length
+            const usernameField = document.getElementById('id_username');
+            if (usernameField && usernameField.value) {
+                if (usernameField.value.length < 3) {
+                    showFieldError(usernameField, 'Ім\'я користувача повинно містити мінімум 3 символи');
+                    isValid = false;
+                } else if (usernameField.value.length > 150) {
+                    showFieldError(usernameField, 'Ім\'я користувача занадто довге');
+                    isValid = false;
+                }
+            }
+            
+            // Validate email format
+            const emailField = document.getElementById('id_email');
+            if (emailField && emailField.value) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(emailField.value)) {
+                    showFieldError(emailField, 'Введіть правильний email');
+                    isValid = false;
+                }
+            }
+            
+            if (!isValid) {
+                e.preventDefault();
+                // Scroll to first error
+                const firstError = document.querySelector('.error-message');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            } else {
+                // Show loading state
+                const saveBtn = document.querySelector('.save-btn');
+                if (saveBtn) {
+                    saveBtn.classList.add('loading');
+                    saveBtn.disabled = true;
+                    saveBtn.innerHTML = '<span class="material-icons spinner">hourglass_empty</span>Збереження...';
+                }
+            }
+        });
+    }
+}
+
+function showFieldError(field, message) {
+    const errorSpan = document.createElement('span');
+    errorSpan.className = 'error-message js-error';
+    errorSpan.textContent = message;
+    field.closest('.form-group').appendChild(errorSpan);
+    
+    // Add error styling to container
+    field.parentElement.classList.add('error');
+    
+    // Remove error styling on input
+    field.addEventListener('input', function() {
+        field.parentElement.classList.remove('error');
+        if (errorSpan.parentNode) {
+            errorSpan.remove();
+        }
+    }, { once: true });
+}
+
+function initLogoutConfirmation() {
+    const logoutForm = document.querySelector('.logout-form');
+    const logoutBtn = document.getElementById('logoutBtn');
+    
+    if (logoutForm && logoutBtn) {
+        logoutForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const confirmed = confirm('Ви впевнені, що хочете вийти з акаунта?');
+            
+            if (confirmed) {
+                logoutBtn.classList.add('loading');
+                logoutBtn.disabled = true;
+                logoutBtn.innerHTML = '<span class="material-icons spinner">hourglass_empty</span>Вихід...';
+                this.submit();
+            }
+        });
+    }
+}
+
+function initRippleEffects() {
+    const buttons = document.querySelectorAll('.btn-primary, .btn-secondary, .btn-logout, .file-input-label, .car-preview-card');
+    
+    buttons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            createRippleEffect(e, this);
+        });
+    });
+}
+
+function createRippleEffect(e, element) {
+    const existingRipples = element.querySelectorAll('.ripple');
+    existingRipples.forEach(ripple => ripple.remove());
+    
+    const ripple = document.createElement('span');
+    ripple.classList.add('ripple');
+    
+    const rect = element.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const x = e.clientX - rect.left - size / 2;
+    const y = e.clientY - rect.top - size / 2;
+    
+    ripple.style.width = ripple.style.height = size + 'px';
+    ripple.style.left = x + 'px';
+    ripple.style.top = y + 'px';
+    
+    element.appendChild(ripple);
+    
+    setTimeout(() => {
+        if (ripple.parentNode) {
+            ripple.remove();
+        }
+    }, 600);
+}
+
+function initInputAnimations() {
+    const inputs = document.querySelectorAll('.form-input');
+    
+    inputs.forEach(input => {
+        // Add focus/blur animations
+        input.addEventListener('focus', function() {
+            this.parentElement.classList.add('focused');
+        });
+        
+        input.addEventListener('blur', function() {
+            if (!this.value) {
+                this.parentElement.classList.remove('focused');
+            }
+        });
+        
+        // Check if input has value on load
+        if (input.value) {
+            input.parentElement.classList.add('focused');
+        }
+    });
+}
+
+// Auto-hide messages after 5 seconds
+document.addEventListener('DOMContentLoaded', function() {
+    const messages = document.querySelectorAll('.message-alert');
+    messages.forEach(message => {
+        setTimeout(() => {
+            message.style.opacity = '0';
+            message.style.transform = 'translateY(-20px)';
+            setTimeout(() => {
+                if (message.parentNode) {
+                    message.remove();
+                }
+            }, 300);
+        }, 5000);
+    });
+});
+</script>
+{% endblock %}
