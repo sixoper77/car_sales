@@ -76,10 +76,12 @@
                         Увійти
                     </a>
                 </button>
-                <button class="btn-primary mobile-btn">
-                    <span class="material-icons">add</span>
-                    Продати авто
-                </button>
+                <a href="{% url "sale:add-car" %}">
+                    <button class="btn-primary mobile-btn">
+                        <span class="material-icons">add</span>
+                        Продати авто
+                    </button>
+                </a>
             </div>
         </div>
     </header>

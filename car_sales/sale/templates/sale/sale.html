@@ -1,46 +1,51 @@
 {% extends "main/base.html" %}
 {% load static %}
 
-{% block title %}AutoSale - Купівля та продаж автомобілів{% endblock %}
+{% block title %}Добавить автомобиль - AutoSale{% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
 <section class="hero">
     <div class="hero-content">
         <div class="hero-text">
-            <h1>Знайдіть свій ідеальний автомобіль</h1>
-            <p>Найбільший вибір вживаних та нових автомобілів в Україні</p>
+            <h1>Добавить автомобиль</h1>
+            <p>Опубликуйте ваше объявление о продаже автомобиля</p>
         </div>
 
         <!-- Search Filters -->
         <div class="search-card">
-            <form id="filterForm" class="filter-form" action="{% url 'main:search' %}" method="get">
+            <form id="addCarForm" class="filter-form" action="{% url 'sale:add-car' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
                 <!-- Main Filters Row -->
                 <div class="filter-row">
                     <div class="filter-group">
-                        <div class="dropdown" id="typeDropdown">
+                        <div class="dropdown" id="categoryDropdown">
                             <button type="button" class="dropdown-button">
-                                <span class="dropdown-text">Легкові</span>
+                                <span class="dropdown-text">Тип автомобиля</span>
                                 <span class="material-icons">expand_more</span>
                             </button>
                             <div class="dropdown-content">
-                                {% for _,type in types %}
-                                    <div class="dropdown-item" data-value="{{ type }}">{{type}}</div>
+                                {% for value, display in form.category.field.choices %}
+                                    {% if value %}
+                                        <div class="dropdown-item" data-value="{{ value }}">{{ display }}</div>
+                                    {% endif %}
                                 {% endfor %}
                             </div>
-                            <input type="hidden" name="type">
+                            <input type="hidden" name="category">
                         </div>
                     </div>
 
                     <div class="filter-group">
                         <div class="dropdown" id="regionDropdown">
                             <button type="button" class="dropdown-button">
-                                <span class="dropdown-text">Регіон</span>
+                                <span class="dropdown-text">Регион</span>
                                 <span class="material-icons">expand_more</span>
                             </button>
                             <div class="dropdown-content">
-                                {% for _,region in regions %}
-                                    <div class="dropdown-item" data-value="{{region}}">{{region}}</div>
+                                {% for value, display in form.region.field.choices %}
+                                    {% if value %}
+                                        <div class="dropdown-item" data-value="{{ value }}">{{ display }}</div>
+                                    {% endif %}
                                 {% endfor %}
                             </div>
                             <input type="hidden" name="region">
@@ -54,8 +59,8 @@
                                 <span class="material-icons">expand_more</span>
                             </button>
                             <div class="dropdown-content">
-                                {% for brand in brands %}
-                                    <div class="dropdown-item brand-item" data-slug="{{brand.slug}}" data-value="{{brand.slug}}">{{brand.brand}}</div>
+                                {% for brand in form.brand.field.queryset %}
+                                    <div class="dropdown-item brand-item" data-slug="{{ brand.slug }}" data-value="{{ brand.id }}">{{ brand.brand }}</div>
                                 {% endfor %}
                             </div>
                             <input type="hidden" name="brand">
@@ -85,27 +90,64 @@
                                 <span class="material-icons">expand_more</span>
                             </button>
                             <div class="dropdown-content">
-                                {% for i in ranges %}
-                                    <div class="dropdown-item" data-value="{{i}}">{{i}}</div>
+                                {% for value in ranges %}
+                                    {% if value %}
+                                        <div class="dropdown-item" data-value="{{ value }}">{{ value }}</div>
+                                    {% endif %}
                                 {% endfor %}
                             </div>
                             <input type="hidden" name="year">
                         </div>
                     </div>
 
+                    <div class="filter-group">
+                        <div class="dropdown" id="colorDropdown">
+                            <button type="button" class="dropdown-button">
+                                <span class="dropdown-text">Цвет</span>
+                                <span class="material-icons">expand_more</span>
+                            </button>
+                            <div class="dropdown-content">
+                                {% for value, display in form.color.field.choices %}
+                                    {% if value %}
+                                        <div class="dropdown-item" data-value="{{ value }}">{{ display }}</div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <input type="hidden" name="color">
+                        </div>
+                    </div>
+
                     <div class="filter-group price-group">
                         <div class="price-inputs">
-                            <input type="number" name="price_min" placeholder="Ціна від" class="price-input">
-                            <span class="price-separator">—</span>
-                            <input type="number" name="price_max" placeholder="до" class="price-input">
+                            <input type="number" name="price" placeholder="Ціна" class="price-input">
                             <span class="currency">$</span>
+                        </div>
+                    </div>
+
+                    <div class="filter-group price-group">
+                        <div class="price-inputs">
+                            <input type="number" name="discount" placeholder="Скидка %" class="price-input">
+                            <span class="currency">%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Third Row -->
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <div class="file-upload">
+                            <input type="file" name="image" id="imageInput" accept="image/*">
+                            <label for="imageInput" class="file-label">
+                                <span class="material-icons">upload</span>
+                                Загрузить фото
+                            </label>
                         </div>
                     </div>
 
                     <div class="filter-group search-group">
                         <button type="submit" class="btn-primary search-btn">
-                            <span class="material-icons">search</span>
-                            Пошук
+                            <span class="material-icons">publish</span>
+                            Опубликовать
                         </button>
                     </div>
                 </div>
@@ -114,40 +156,9 @@
     </div>
 </section>
 
-<!-- Featured Section -->
-<section class="featured-section">
-    <div class="container">
-        <h2>Рекомендовані авто</h2>
-        <div class="cars-grid">
-            {% for car in cars  %}
-            <div class="car-card">
-                <div class="car-image">
-                    <div class="placeholder-image">
-                        <img src="{{car.image.url}}" alt="" class="card-image">
-                    </div>
-                    <div class="car-badge">ТОП</div>
-                </div>
-                <div class="car-info">
-                    <h3>{{car.brand}}-{{car.model}}-{{car.year}}</h3>
-                    <p class="car-details">Owner: {{car.owner}} color:{{car.color}}</p>
-                    <p class="car-price">${{car.price}}</p>
-                    <div class="car-location">
-                        <span class="material-icons">location_on</span>
-                        {{car.region}}
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-        <div class="section-actions">
-            <button class="btn-secondary">Переглянути всі авто</button>
-        </div>
-    </div>
-</section>
-
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    const form = document.getElementById('filterForm');
+    const form = document.getElementById('addCarForm');
     const modelsContainer = document.getElementById('models');
     const brandHidden = document.querySelector('#brandDropdown input[type="hidden"]');
     const modelHidden = document.querySelector('#modelDropdown input[type="hidden"]');
@@ -175,8 +186,9 @@ document.addEventListener("DOMContentLoaded", function() {
             // Brand selection -> load models
             if(item.classList.contains('brand-item')) {
                 const brandSlug = item.dataset.slug;
+                const brandId = item.dataset.value;
                 if(dropdownText) dropdownText.textContent = item.textContent.trim();
-                if(hiddenInput) hiddenInput.value = brandSlug;
+                if(hiddenInput) hiddenInput.value = brandId;
                 dropdown.classList.remove('active');
 
                 modelHidden.value = "";
@@ -238,12 +250,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Submit form
     form.addEventListener('submit', function(e) {
-        console.log('Submitting form with GET params:', new URLSearchParams(new FormData(form)).toString());
-        // форма отправится обычным GET
+        console.log('Submitting form with POST data:', new FormData(form));
+        // форма отправится обычным POST
     });
 });
 </script>
 {% endblock %}
-
-
-
