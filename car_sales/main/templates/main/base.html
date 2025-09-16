@@ -51,10 +51,13 @@
                     </a>
                     
                 {% endif %}
-                <button class="btn-primary">
-                    <span class="material-icons">add</span>
-                    Продати авто
-                </button>
+                <a href="{% url "sale:add-car" %}">
+                    
+                    <button class="btn-primary">
+                        <span class="material-icons">add</span>
+                        Продати авто
+                    </button>
+                </a>
             </div>
             
             <!-- Mobile Menu Button -->
