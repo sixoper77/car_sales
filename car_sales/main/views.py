@@ -20,6 +20,10 @@ def get_models(request,slug):
     except CarBrand.DoesNotExist:
         return JsonResponse([], safe=False)
     
+def model_detail(request,slug):
+    car=Cars.objects.get(slug=slug)
+    return render(request,'main/detail.html',{'car':car})
+    
 def search(request):
     print(request)
     print("GET parameters:", request.GET)

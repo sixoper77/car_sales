@@ -120,24 +120,28 @@
         <h2>Рекомендовані авто</h2>
         <div class="cars-grid">
             {% for car in cars  %}
-            <div class="car-card">
-                <div class="car-image">
-                    <div class="placeholder-image">
-                        <img src="{{car.image.url}}" alt="" class="card-image">
+            
+                <div class="car-card">
+                    <div class="car-image">
+                        <div class="placeholder-image">
+                            <img src="{{car.image.url}}" alt="" class="card-image">
+                        </div>
+                        <div class="car-badge">ТОП</div>
                     </div>
-                    <div class="car-badge">ТОП</div>
-                </div>
-                <div class="car-info">
-                    <h3>{{car.brand}}-{{car.model}}-{{car.year}}</h3>
-                    <p class="car-details">Owner: {{car.owner}} color:{{car.color}}</p>
-                    <p class="car-price">${{car.price}}</p>
-                    <div class="car-location">
-                        <span class="material-icons">location_on</span>
-                        {{car.region}}
+                    <div class="car-info">
+                        <a href="{{ car.get_absolute_url }}">
+                            <h3>{{car.brand}}-{{car.model}}-{{car.year}}</h3>
+                        </a>
+                        <p class="car-details">Owner: {{car.owner}} color:{{car.color}}</p>
+                        <p class="car-price">${{car.price}}</p>
+                        <div class="car-location">
+                            <span class="material-icons">location_on</span>
+                            {{car.region}}
+                        </div>
                     </div>
                 </div>
-            </div>
-            {% endfor %}
+                {% endfor %}
+            
         </div>
         <div class="section-actions">
             <button class="btn-secondary">Переглянути всі авто</button>

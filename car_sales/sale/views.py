@@ -4,6 +4,7 @@ from main.models import CarBrand
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from . forms import AddCarform
+from django.utils.text import slugify
 
 @login_required
 def add_car(request):
@@ -14,7 +15,8 @@ def add_car(request):
             car=form.save(commit=False)
             car.owner=request.user
             car.save()
-            
+            car.slug=slugify(f'{car.brand}-{car.model}-{car.id}')
+            car.save(update_fields=['slug'])
             return redirect('main:main')
     else:
         form=AddCarform()
