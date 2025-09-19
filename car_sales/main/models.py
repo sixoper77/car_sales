@@ -74,7 +74,7 @@ class Cars(models.Model):
         return self.model
     
     def get_absolute_url(self):
-        return reverse("main:detail", args=[self.id])
+        return reverse("main:detail", args=[self.slug])
     
     def get_absolute_price(self):
         if self.discount:
