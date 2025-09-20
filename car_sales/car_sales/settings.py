@@ -60,6 +60,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
+    
+    'users.middleware.UpdateUserLastActivityMiddelware',
 ]
 
 ROOT_URLCONF = 'car_sales.urls'

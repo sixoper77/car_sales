@@ -1,0 +1,151 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}{{ car.brand.name }} {{ car.model.name }} - CarMarket{% endblock %}
+
+{% block content %}
+<div class="car-detail-container">
+    <!-- Left Panel - Car Information -->
+    <div class="car-info-panel">
+        <button class="favorite-btn">
+            <span class="material-icons">favorite_border</span>
+        </button>
+        
+        <div class="car-title-info">
+            <h1>{{ car.brand }} {{ car.model }} {{ car.year }}</h1>
+            <div class="car-subtitle">{{ car.get_type_display }} • {{ car.category.name }}</div>
+        </div>
+
+        <div class="car-price-section">
+            <div class="car-main-price">${{ car.price|floatformat:0 }}</div>
+            <div class="car-price-details">≈ {{ car.price|floatformat:0 }} тыс. грн. грошовый курс</div>
+        </div>
+
+        <div class="car-views">
+            <span class="material-icons" style="font-size: 14px;">visibility</span>
+            <span>173 тис. за период</span>
+        </div>
+
+        <div class="seller-section">
+            <div class="seller-label">Професійний продавець</div>
+            
+            <div class="seller-info">
+                <div class="seller-avatar">{{ car.owner.username|slice:":2"|upper }}</div>
+                <div class="seller-details">
+                    <h4>{{ car.owner.username }}</h4>
+                    <div class="seller-online">Был в сети {{car.owner.last_active|date:"d.m.Y H:i"}}</div>
+                </div>
+            </div>
+            
+            <div class="seller-location">{{ car.region }}</div>
+            
+            <div class="seller-verification">
+                <div class="verification-item">
+                    <span class="material-icons">verified</span>
+                    <span>Перевірений власник</span>
+                </div>
+                <div class="verification-item">
+                    <span class="material-icons">phone_verified</span>
+                    <span>Перевірений телефон</span>
+                </div>
+            </div>
+
+            <div class="seller-phone">
+                <span class="material-icons">phone</span>
+                <span>(073) XXX-XX-XX</span>
+                <span class="phone-toggle">показати</span>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn-chat">
+                <span class="material-icons">message</span>
+                Написати в чат
+            </button>
+            <button class="btn-callback">
+                <span class="material-icons">phone_callback</span>
+                Передзвонити авто
+            </button>
+            <div class="callback-hours">Тільки • По 11:00-20:00</div>
+        </div>
+    </div>
+
+    <!-- Right Panel - Images and Details -->
+    <div class="car-images-panel">
+        <!-- Main Image -->
+        <div class="main-image-container">
+            {% if car.image %}
+                <img src="{{ car.image.url }}" alt="{{ car.brand.name }} {{ car.model.name }}" class="main-car-image">
+            {% else %}
+                <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: var(--md-on-surface-variant);">
+                    <span class="material-icons" style="font-size: 48px;">directions_car</span>
+                </div>
+            {% endif %}
+            
+            <div class="source-badge">auto.ria</div>
+            
+            <button class="image-nav-btn nav-prev">
+                <span class="material-icons">chevron_left</span>
+            </button>
+            <button class="image-nav-btn nav-next">
+                <span class="material-icons">chevron_right</span>
+            </button>
+            
+            <div class="image-counter">
+                <span class="material-icons" style="font-size: 14px; margin-right: 4px;">camera_alt</span>
+                23 з 56
+            </div>
+        </div>
+
+        <!-- Image Thumbnails -->
+        <div class="image-thumbnails">
+            <div class="thumbnail active">
+                {% if car.image %}
+                    <img src="{{ car.image.url }}" alt="Фото 1">
+                {% else %}
+                    <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: var(--md-surface-variant);">
+                        <span class="material-icons">image</span>
+                    </div>
+                {% endif %}
+            </div>
+            <!-- Placeholder thumbnails -->
+            {% for i in "12345678" %}
+            <div class="thumbnail">
+                <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: var(--md-surface-variant);">
+                    <span class="material-icons">image</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Car Details Section -->
+        <div class="car-details-section">
+            <h2 class="details-title">{{ car.brand }} {{ car.model }} {{ car.year }}</h2>
+            <div class="details-subtitle">•{{ car.category}}</div>
+            
+            <div class="additional-info">
+                <div class="info-item">Додатки з США</div>
+                <div class="info-item">Був в ДТП</div>
+            </div>
+
+            <div class="verification-info">
+                <div>Перевірено AUTO.RIA на реєстрацію МВС</div>
+                <div class="update-date">{% if car.updated %}{{car.updated}}{% else %}{{car.created}}{% endif %}</div>
+
+                <div class="vin-info">
+                    <div class="vin-item">
+                        <strong>АТ 2244 IC</strong>
+                    </div>
+                    <div class="vin-item">
+                        <span class="material-icons" style="font-size: 12px;">verified</span>
+                        Перевірений VIN код
+                    </div>
+                    <div class="vin-item">
+                        <strong>ITALSXDRXE6300268</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
