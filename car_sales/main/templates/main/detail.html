@@ -1,6 +1,7 @@
 {% extends "main/base.html" %}
 {% load static %}
-
+{% load currency %}
+{% load humanize %}
 {% block title %}{{ car.brand.name }} {{ car.model.name }} - CarMarket{% endblock %}
 
 {% block content %}
@@ -17,8 +18,8 @@
         </div>
 
         <div class="car-price-section">
-            <div class="car-main-price">${{ car.price|floatformat:0 }}</div>
-            <div class="car-price-details">≈ {{ car.price|floatformat:0 }} тыс. грн. грошовый курс</div>
+            <div class="car-main-price">${{ car.price|floatformat:2|intcomma }}</div>
+            <div class="car-price-details">≈ {{ car.price|usd_to_uah|intcomma }} грн</div>
         </div>
 
         <div class="car-views">

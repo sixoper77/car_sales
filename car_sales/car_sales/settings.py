@@ -38,17 +38,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+    'django.contrib.humanize',
     
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     
+    "django_apscheduler",
     
     'main',
     'users',
     'sale',
+    'scheduler',
 ]
 
 MIDDLEWARE = [

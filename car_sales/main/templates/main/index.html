@@ -1,6 +1,6 @@
 {% extends "main/base.html" %}
 {% load static %}
-
+{% load humanize %}
 {% block title %}AutoSale - Купівля та продаж автомобілів{% endblock %}
 
 {% block content %}
@@ -133,7 +133,7 @@
                             <h3>{{car.brand}}-{{car.model}}-{{car.year}}</h3>
                         </a>
                         <p class="car-details">Owner: {{car.owner}} color:{{car.color}}</p>
-                        <p class="car-price">${{car.price}}</p>
+                        <p class="car-price">${{car.price|intcomma}}</p>
                         <div class="car-location">
                             <span class="material-icons">location_on</span>
                             {{car.region}}
