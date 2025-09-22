@@ -16,10 +16,12 @@ def get_client_ip(request):
     
 
 def main_view(request):
-    print(request)
     cars=Cars.objects.all()
+    paginator=Paginator(cars,5)
+    page_number=request.GET.get('page')
+    page_obj=paginator.get_page(page_number)
     brands=CarBrand.objects.all()
-    context={'types':TYPES,'regions':REGIONS,'ranges':range(1900,datetime.date.today().year+1),'brands':brands,'colors':COLORS,'cars':cars}
+    context={'types':TYPES,'regions':REGIONS,'ranges':range(1900,datetime.date.today().year+1),'brands':brands,'colors':COLORS,'page_obj':page_obj}
     return render(request,'main/index.html',context=context)
 
 def get_models(request,slug):
