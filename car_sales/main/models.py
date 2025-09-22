@@ -1,7 +1,6 @@
 import datetime
+from django.utils import timezone
 from django.db import models
-
-
 from django.urls import reverse
 from django.conf import settings
 from django.core.validators import MinValueValidator,MaxValueValidator
@@ -80,3 +79,12 @@ class Cars(models.Model):
         if self.discount:
             return round(self.price-self.price*self.discount/100,2)
         return self.price
+    
+class CarViews(models.Model):
+    car=models.ForeignKey(Cars,related_name="views",on_delete=models.CASCADE)
+    ip_address=models.GenericIPAddressField(null=True,blank=True)
+    user=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,null=True,blank=True)
+    viewed_at=models.DateTimeField(default=timezone.now)
+    
+    
+    

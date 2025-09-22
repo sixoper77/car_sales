@@ -1,8 +1,19 @@
 import datetime
-from .models import CarBrand,CarModel,Cars
+from .models import CarBrand,CarModel,Cars,CarViews
 from django.shortcuts import render
 from django.http import JsonResponse
 from .constants import TYPES,REGIONS,COLORS
+from django.core.paginator import Paginator
+from django.utils import timezone
+from django.db.models import Q
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR') # В REMOTE_ADDR значение айпи пользователя
+    return ip
+    
 
 def main_view(request):
     print(request)
@@ -21,7 +32,23 @@ def get_models(request,slug):
         return JsonResponse([], safe=False)
     
 def model_detail(request,slug):
+    
     car=Cars.objects.get(slug=slug)
+    ip=get_client_ip(request)
+    if request.user.is_authenticated:
+        exist=CarViews.objects.filter(car=car).filter(
+            Q(user=request.user)|Q(ip_address=ip)
+        ).exists()
+    else:
+        exist=CarViews.objects.filter(
+            car=car,ip_address=ip
+        ).exists()
+    if not exist:
+        CarViews.objects.create(
+            car=car,
+            user=request.user if request.user.is_authenticated else None,
+            ip_address=ip,
+        )
     return render(request,'main/detail.html',{'car':car})
     
 def search(request):
