@@ -164,7 +164,7 @@ body {
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.3);
     transform: scale(0);
-    animation: ripple 0.6s linear;
+    animation: ripple 0.0s linear;
     pointer-events: none;
 }
 
@@ -1581,7 +1581,7 @@ body {
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.3);
     transform: scale(0);
-    animation: ripple 0.6s linear;
+    animation: ripple 0.0s linear;
     pointer-events: none;
 }
 
@@ -2304,138 +2304,75 @@ body {
     }
 }
 
-
-
-.section-actions {
-    text-align: center;
-    padding: 20px 0;
-    border-top: 1px solid var(--md-outline-variant);
-    margin-top: 32px;
-}
-
 .pagination {
-    display: inline-block;
-    margin-bottom: 16px;
-}
-
-.step-links {
     display: flex;
+    justify-content: center; /* Центрування по горизонталі */
     align-items: center;
     gap: 8px;
-    flex-wrap: wrap;
-    justify-content: center;
+    list-style: none;
+    margin: 20px 0; /* Додав відступи зверху і знизу */
+    padding: 0;
 }
 
-.step-links a {
+.pagination li {
+    margin: 0;
+    padding: 0;
+}
+
+.pagination li a {
     display: inline-flex;
     align-items: center;
-    padding: 8px 16px;
-    background: var(--md-surface);
-    border: 1px solid var(--md-outline-variant);
+    justify-content: center;
+    min-width: 44px;
+    height: 44px;
+    padding: 0 12px;
+    background: white;
+    border: 1px solid #d1d5db;
     border-radius: 8px;
-    color: var(--md-on-surface);
+    color: #6b7280;
     font-size: 14px;
     font-weight: 500;
     text-decoration: none;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    white-space: nowrap;
-}
-
-.step-links a:hover {
-    background: var(--md-primary-container);
-    border-color: var(--md-primary);
-    color: var(--md-primary);
-    transform: translateY(-1px);
-    box-shadow: var(--md-elevation-1);
-}
-
-.step-links .current {
-    display: inline-flex;
-    align-items: center;
-    padding: 8px 16px;
-    background: var(--md-primary);
-    color: var(--md-on-primary);
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    box-shadow: var(--md-elevation-1);
-    white-space: nowrap;
-}
-
-/* Настройки отображения под пагинацией */
-.pagination-settings {
-    display: flex;
-    justify-content: center;
-    margin-top: 16px;
-}
-
-.items-per-page {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    color: var(--md-on-surface);
-}
-
-.select-label {
-    font-weight: 500;
-}
-
-.items-select {
-    padding: 6px 10px;
-    background: var(--md-surface);
-    border: 1px solid var(--md-outline-variant);
-    border-radius: 6px;
-    color: var(--md-on-surface);
-    font-size: 14px;
-    cursor: pointer;
     transition: all 0.2s ease;
-    outline: none;
+    cursor: pointer;
 }
 
-.items-select:hover {
-    border-color: var(--md-primary);
+.pagination li a:hover:not(.disabled) {
+    background: #f9fafb;
+    border-color: #9ca3af;
+    color: #374151;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.items-select:focus {
-    border-color: var(--md-primary);
-    box-shadow: 0 0 0 2px rgba(103, 80, 164, 0.2);
+/* Стиль для активної сторінки */
+.pagination li a.disabled {
+    background: #ef4444;
+    color: white;
+    border-color: #ef4444;
+    font-weight: 600;
+    cursor: default;
 }
 
-.select-suffix {
-    color: var(--md-on-surface-variant);
+/* Стиль для неактивних кнопок (Previous/Next) */
+.pagination li.disabled a {
+    background: #f9fafb;
+    color: #d1d5db;
+    border-color: #e5e7eb;
+    cursor: not-allowed;
+    pointer-events: none;
 }
 
-/* Мобильная адаптация */
 @media (max-width: 768px) {
-    .step-links {
-        gap: 6px;
-    }
-    
-    .step-links a,
-    .step-links .current {
-        padding: 6px 12px;
-        font-size: 13px;
-    }
-    
-    .items-per-page {
-        font-size: 13px;
-        gap: 6px;
-    }
-}
-
-@media (max-width: 480px) {
-    .step-links {
+    .pagination {
         gap: 4px;
+        margin: 15px 0;
     }
     
-    .step-links a,
-    .step-links .current {
-        padding: 6px 10px;
-        font-size: 12px;
-    }
-    
-    .pagination-settings {
-        margin-top: 12px;
+    .pagination li a {
+        min-width: 36px;
+        height: 36px;
+        font-size: 13px;
+        padding: 0 8px;
     }
 }

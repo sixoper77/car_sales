@@ -20,7 +20,7 @@ def start():
     scheduler.add_jobstore(DjangoJobStore(),'default')
     scheduler.add_job(
         get_usd_to_uah,
-        CronTrigger(hour=0,minute=8),
+        CronTrigger(hour=0,minute=0),
         id='get_usd_to_uah',
         replace_existing=True
     )
