@@ -39,8 +39,8 @@
                                 <span class="material-icons">expand_more</span>
                             </button>
                             <div class="dropdown-content">
-                                {% for _,region in regions %}
-                                    <div class="dropdown-item" data-value="{{region}}">{{region}}</div>
+                                {% for city,region in regions %}
+                                    <div class="dropdown-item" data-value="{{city}}">{{region}}</div>
                                 {% endfor %}
                             </div>
                             <input type="hidden" name="region">

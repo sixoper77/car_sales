@@ -73,7 +73,7 @@ class Cars(models.Model):
                  models.Index(fields=['model']),
                  models.Index(fields=['-created'])]
     def __str__(self):
-        return self.model
+        return f"{self.model.model}"
     
     def get_absolute_url(self):
         return reverse("main:detail", args=[self.slug])
