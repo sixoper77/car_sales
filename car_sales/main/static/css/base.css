@@ -2376,3 +2376,40 @@ body {
         padding: 0 8px;
     }
 }
+
+.price-input,
+.form-input,
+input[type="number"],
+input[type="text"],
+input[name="price"],
+input[name="discount"],
+input[name="mileage"] {
+    color: white !important;
+    background: transparent;
+}
+
+/* Белый цвет для placeholder текста */
+.price-input::placeholder,
+.form-input::placeholder,
+input[type="number"]::placeholder,
+input[type="text"]::placeholder {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Убираем автозаполнение фона браузера */
+.price-input:-webkit-autofill,
+.form-input:-webkit-autofill,
+input[type="number"]:-webkit-autofill,
+input[type="text"]:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 30px transparent inset !important;
+    -webkit-text-fill-color: white !important;
+}
+
+/* Для Firefox */
+.price-input:-moz-autofill,
+.form-input:-moz-autofill,
+input[type="number"]:-moz-autofill,
+input[type="text"]:-moz-autofill {
+    background-color: transparent !important;
+    color: white !important;
+}

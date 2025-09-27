@@ -4,10 +4,14 @@ from main.constants import COLORS
 class AddCarform(forms.ModelForm):
     class Meta:
         model=Cars
-        fields=['category','brand','model','region','price','color','discount','image','year']
+        fields=['category','brand','model','region','price','color','discount','image','gearbox','mileage','air_conditioner','year','used']
         widgets={
             'category':forms.Select(attrs={'class':'dropdown','id':'typeDropdown'}),
             'brand':forms.Select(attrs={'class':'dropdown','id':'brandDropdown'}),
+            'gearbox':forms.Select(attrs={'class':'dropdown','id':'gearboxDropdown'}),
+            'air_conditioner':forms.Select(attrs={'class':'dropdown','id':'air_conditionerDropdown'}),
+            'used':forms.Select(attrs={'class':'dropdown','id':'usedDropdown'}),
+            'mileage':forms.NumberInput(attrs={'class':'price-input','id':'mileageDropdown'}),
             'model':forms.Select(attrs={'class':'dropdown','id':'modelDropdown'}),
             'year':forms.Select(attrs={'class': 'dropdown', 'id': 'yearDropdown'}),
             'color':forms.Select(attrs={'class':'dropdown'}),  

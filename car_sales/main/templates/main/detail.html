@@ -125,8 +125,10 @@
             <div class="details-subtitle">•{{ car.category}}</div>
             
             <div class="additional-info">
-                <div class="info-item">Додатки з США</div>
-                <div class="info-item">Був в ДТП</div>
+                <div class="info-item">Стан:{% if car.used %}Б/У{% else %}Новий{% endif %}</div>
+                <div class="info-item">Пробег: {{car.mileage|intcomma}}км</div>
+                <div class="info-item">Коробка передач: {{car.get_gearbox_display}}</div>
+                <div class="info-item">Кондиционер: {{car.get_air_conditioner_display}}</div>
             </div>
 
             <div class="verification-info">
