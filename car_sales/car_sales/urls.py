@@ -24,6 +24,7 @@ urlpatterns = [
     path('accounts/',include('allauth.urls')),
     path('users/',include('users.urls',namespace='users')),
     path('sale/',include('sale.urls',namespace='sale')),
+    path('search/',include('search.urls',namespace='search')),
 ]
 
 if settings.DEBUG:
