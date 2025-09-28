@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'users',
     'sale',
     'scheduler',
+    'search',
 ]
 
 MIDDLEWARE = [

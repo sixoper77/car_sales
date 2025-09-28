@@ -2413,3 +2413,215 @@ input[type="text"]:-moz-autofill {
     background-color: transparent !important;
     color: white !important;
 }
+
+/* Year range styling */
+.year-group {
+    flex: 1;
+}
+
+.year-inputs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
+.year-input {
+    flex: 1;
+    padding: 10px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    font-size: 14px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 8px center;
+    background-repeat: no-repeat;
+    background-size: 16px;
+    padding-right: 32px;
+    transition: all 0.3s ease;
+}
+
+.year-input:focus {
+    outline: none;
+    border-color: #8b5cf6;
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.25);
+}
+
+.year-input:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.year-input option {
+    background: #2a2a2a;
+    color: white;
+    padding: 8px;
+}
+
+.year-separator {
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
+}
+
+/* Make sure other styles remain consistent */
+.price-group, .search-group {
+    flex: 1;
+}
+
+.filter-row {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.filter-group {
+    flex: 1;
+}
+
+@media (max-width: 768px) {
+    .filter-row {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .filter-group {
+        width: 100%;
+    }
+    
+    .year-inputs {
+        justify-content: center;
+    }
+}
+
+/* Results Header */
+.results-header {
+    background: #000;
+    padding: 40px 0;
+    color: white;
+}
+
+.results-header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.results-info h1 {
+    font-size: 2rem;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.results-info p {
+    font-size: 1rem;
+    opacity: 0.9;
+}
+
+.sort-options {
+    display: flex;
+    align-items: center;
+}
+
+.sort-select {
+    padding: 10px 15px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 14px;
+    backdrop-filter: blur(10px);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.sort-select:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.sort-select option {
+    background: #2a2a2a;
+    color: white;
+}
+
+/* No Results */
+.no-results {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+}
+
+.no-results-content {
+    text-align: center;
+    padding: 40px;
+    color: white;
+}
+
+.no-results-icon {
+    font-size: 80px;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 20px;
+}
+
+.no-results h3 {
+    font-size: 1.8rem;
+    color: white;
+    margin-bottom: 12px;
+}
+
+.no-results p {
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+}
+
+.btn-primary {
+    background: #8b5cf6;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 25px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .results-header .container {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+    
+    .results-info h1 {
+        font-size: 1.6rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .results-header {
+        padding: 30px 0;
+    }
+    
+    .results-info h1 {
+        font-size: 1.4rem;
+    }
+}

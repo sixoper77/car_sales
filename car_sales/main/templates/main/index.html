@@ -78,18 +78,21 @@
 
                 <!-- Second Row -->
                 <div class="filter-row">
-                    <div class="filter-group">
-                        <div class="dropdown" id="yearDropdown">
-                            <button type="button" class="dropdown-button">
-                                <span class="dropdown-text">Рік випуску</span>
-                                <span class="material-icons">expand_more</span>
-                            </button>
-                            <div class="dropdown-content">
+                    <div class="filter-group year-group">
+                        <div class="year-inputs">
+                            <select name="year_min" class="year-input">
+                                <option value="">Рік від</option>
                                 {% for i in ranges %}
-                                    <div class="dropdown-item" data-value="{{i}}">{{i}}</div>
+                                    <option value="{{i}}">{{i}}</option>
                                 {% endfor %}
-                            </div>
-                            <input type="hidden" name="year">
+                            </select>
+                            <span class="year-separator">—</span>
+                            <select name="year_max" class="year-input">
+                                <option value="">до</option>
+                                {% for i in ranges %}
+                                    <option value="{{i}}">{{i}}</option>
+                                {% endfor %}
+                            </select>
                         </div>
                     </div>
 
@@ -159,6 +162,8 @@
         </ul>
     </div>
 </section>
+
+
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
@@ -251,6 +256,60 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
+    // Year validation
+    const yearMinSelect = document.querySelector('select[name="year_min"]');
+    const yearMaxSelect = document.querySelector('select[name="year_max"]');
+
+    if (yearMinSelect && yearMaxSelect) {
+        yearMinSelect.addEventListener('change', function() {
+            const minYear = parseInt(this.value);
+            if (minYear) {
+                // Disable options in year_max that are less than selected min year
+                Array.from(yearMaxSelect.options).forEach(option => {
+                    if (option.value && parseInt(option.value) < minYear) {
+                        option.disabled = true;
+                    } else {
+                        option.disabled = false;
+                    }
+                });
+                
+                // Reset year_max if it's less than min year
+                if (yearMaxSelect.value && parseInt(yearMaxSelect.value) < minYear) {
+                    yearMaxSelect.value = '';
+                }
+            } else {
+                // Enable all options in year_max
+                Array.from(yearMaxSelect.options).forEach(option => {
+                    option.disabled = false;
+                });
+            }
+        });
+
+        yearMaxSelect.addEventListener('change', function() {
+            const maxYear = parseInt(this.value);
+            if (maxYear) {
+                // Disable options in year_min that are greater than selected max year
+                Array.from(yearMinSelect.options).forEach(option => {
+                    if (option.value && parseInt(option.value) > maxYear) {
+                        option.disabled = true;
+                    } else {
+                        option.disabled = false;
+                    }
+                });
+                
+                // Reset year_min if it's greater than max year
+                if (yearMinSelect.value && parseInt(yearMinSelect.value) > maxYear) {
+                    yearMinSelect.value = '';
+                }
+            } else {
+                // Enable all options in year_min
+                Array.from(yearMinSelect.options).forEach(option => {
+                    option.disabled = false;
+                });
+            }
+        });
+    }
+
     // Submit form
     form.addEventListener('submit', function(e) {
         console.log('Submitting form with GET params:', new URLSearchParams(new FormData(form)).toString());
@@ -259,6 +318,5 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 </script>
 {% endblock %}
-
 
 

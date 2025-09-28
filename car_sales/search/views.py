@@ -6,7 +6,7 @@ from django.db.models import Q
 
 
 def search(request):
-    print(request)
+    print(request.GET)
     cars=Cars.objects.filter(
         available=True
     )
@@ -23,8 +23,10 @@ def search(request):
                 query&=Q(brand__slug=value)
             case 'model':
                 query&=Q(model__id=value)
-            case 'year':
-                query&=Q(year=value)
+            case 'year_min':
+                query&=Q(year__gte=value)
+            case 'year_max':
+                query&=Q(year__lte=value)
             case 'price_min':
                 try:
                     query&=Q(price__gte=Decimal(value))
@@ -37,7 +39,7 @@ def search(request):
                     pass
     cars=cars.filter(query)
     print(cars)
-    paginator=Paginator(cars,5)
+    paginator=Paginator(cars,2)
     page_number=request.GET.get('page')
     page_obj=paginator.get_page(page_number)
-    return render(request,'search/search.html',{'cars':page_obj})
+    return render(request,'search/search.html',{'page_obj':page_obj})
