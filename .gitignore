@@ -18,3 +18,4 @@ __pycache__/
 img/
 .env
 fixtures/
+products/

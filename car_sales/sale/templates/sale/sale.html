@@ -197,10 +197,10 @@
                 <div class="filter-row">
                     <div class="filter-group">
                         <div class="file-upload">
-                            <input type="file" name="image" id="imageInput" accept="image/*">
+                            <input type="file" name="images" id="imageInput" accept="image/*" multiple>
                             <label for="imageInput" class="file-label">
                                 <span class="material-icons">upload</span>
-                                Загрузить фото
+                                Загрузить фото (до 15 шт.)
                             </label>
                         </div>
                     </div>
@@ -223,6 +223,10 @@ document.addEventListener("DOMContentLoaded", function() {
     const modelsContainer = document.getElementById('models');
     const brandHidden = document.querySelector('#brandDropdown input[type="hidden"]');
     const modelHidden = document.querySelector('#modelDropdown input[type="hidden"]');
+    const imageInput = document.getElementById('imageInput');
+    
+    // Массив для накопления файлов
+    let allFiles = [];
 
     // Общий обработчик клика
     document.addEventListener('click', function(e) {
@@ -309,10 +313,103 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    // Submit form
+    // НАКОПЛЕНИЕ ФАЙЛОВ при каждом выборе
+    imageInput.addEventListener('change', function(e) {
+        const newFiles = Array.from(e.target.files);
+        
+        // Добавляем новые файлы к существующим
+        newFiles.forEach(file => {
+            // Проверяем что такого файла еще нет (по имени и размеру)
+            const exists = allFiles.some(f => f.name === file.name && f.size === file.size);
+            if(!exists && allFiles.length < 15) {
+                allFiles.push(file);
+            }
+        });
+        
+        // Обновляем текст label
+        const fileLabel = document.querySelector('.file-label');
+        if(fileLabel) {
+            fileLabel.innerHTML = `
+                <span class="material-icons">upload</span>
+                Загружено: ${allFiles.length} из 15 фото
+            `;
+        }
+        
+        console.log(`Всего файлов в массиве: ${allFiles.length}`);
+        allFiles.forEach((file, idx) => {
+            console.log(`  ${idx + 1}. ${file.name}`);
+        });
+        
+        if(allFiles.length >= 15) {
+            alert('Достигнут лимит: 15 фотографий');
+        }
+        
+        // Очищаем input чтобы можно было выбрать те же файлы снова
+        imageInput.value = '';
+    });
+
+    // Submit form с накопленными файлами
     form.addEventListener('submit', function(e) {
-        console.log('Submitting form with POST data:', new FormData(form));
-        // форма отправится обычным POST
+        e.preventDefault();
+        
+        if(allFiles.length === 0) {
+            alert('Добавьте хотя бы одно фото!');
+            return;
+        }
+        
+        console.log(`=== ОТПРАВКА ${allFiles.length} ФАЙЛОВ ===`);
+        
+        const formData = new FormData();
+        
+        // CSRF токен
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        formData.append('csrfmiddlewaretoken', csrfToken);
+        
+        // Все скрытые поля
+        const hiddenInputs = form.querySelectorAll('input[type="hidden"]:not([name="csrfmiddlewaretoken"])');
+        hiddenInputs.forEach(input => {
+            if(input.name && input.value) {
+                formData.append(input.name, input.value);
+            }
+        });
+        
+        // Числовые поля
+        const numberInputs = form.querySelectorAll('input[type="number"]');
+        numberInputs.forEach(input => {
+            if(input.name && input.value) {
+                formData.append(input.name, input.value);
+            }
+        });
+        
+        // ДОБАВЛЯЕМ ВСЕ НАКОПЛЕННЫЕ ФАЙЛЫ
+        allFiles.forEach((file, idx) => {
+            formData.append('images', file);
+            console.log(`Файл ${idx + 1}: ${file.name} (${(file.size/1024).toFixed(2)} KB)`);
+        });
+        
+        // Отправка
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': csrfToken
+            }
+        })
+        .then(response => {
+            if(response.ok) {
+                console.log('✓ Успешно отправлено!');
+                window.location.href = '/';
+            } else {
+                return response.text().then(text => {
+                    console.error('Ошибка сервера:', text);
+                    alert('Ошибка при сохранении');
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка отправки:', error);
+            alert('Ошибка при отправке формы');
+        });
     });
 });
 </script>

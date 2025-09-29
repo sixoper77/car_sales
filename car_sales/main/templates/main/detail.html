@@ -75,13 +75,14 @@
     <div class="car-images-panel">
         <!-- Main Image -->
         <div class="main-image-container">
-            {% if car.image %}
-                <img src="{{ car.image.url }}" alt="{{ car.brand.name }} {{ car.model.name }}" class="main-car-image">
-            {% else %}
-                <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: var(--md-on-surface-variant);">
-                    <span class="material-icons" style="font-size: 48px;">directions_car</span>
-                </div>
+            {% if car.images.all|length > 1 %}
+                {% for image in car.images.all  %}
+                    <img src="{{image.image.url}}" alt="" class="main-car-image" data-index="{{forloop.counter0}}">
+                {% endfor %}
+            {% elif car.images.first %}
+                <img src="{{car.images.first.image.url}}" alt="" class="main-car-image" data-index="0"
             {% endif %}
+            
             
             <div class="source-badge">auto.ria</div>
             
@@ -91,7 +92,9 @@
             <button class="image-nav-btn nav-next">
                 <span class="material-icons">chevron_right</span>
             </button>
-            
+
+
+
             <div class="image-counter">
                 <span class="material-icons" style="font-size: 14px; margin-right: 4px;">camera_alt</span>
                 23 з 56
@@ -100,23 +103,13 @@
 
         <!-- Image Thumbnails -->
         <div class="image-thumbnails">
-            <div class="thumbnail active">
-                {% if car.image %}
-                    <img src="{{ car.image.url }}" alt="Фото 1">
-                {% else %}
-                    <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: var(--md-surface-variant);">
-                        <span class="material-icons">image</span>
-                    </div>
-                {% endif %}
-            </div>
-            <!-- Placeholder thumbnails -->
-            {% for i in "12345678" %}
-            <div class="thumbnail">
-                <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: var(--md-surface-variant);">
-                    <span class="material-icons">image</span>
+            <div class="image-thumbnails">
+                {% for image in car.images.all %}
+                <div class="thumbnail {% if forloop.first %}active{% endif %}" data-index="{{forloop.counter0}}">
+                    <img src="{{image.image.url}}" alt="Фото {{forloop.counter}}">
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
 
         <!-- Car Details Section -->
@@ -151,4 +144,85 @@
         </div>
     </div>
 </div>
+<script>
+    
+    const images = document.querySelectorAll('.main-car-image');
+    const thumbnails = document.querySelectorAll('.thumbnail');
+    const prevBtn = document.querySelector('.image-nav-btn.nav-prev');
+    const nextBtn = document.querySelector('.image-nav-btn.nav-next');
+    const imageCounter = document.querySelector('.image-counter');
+    let currentIndex = 0;
+
+    // Функция обновления отображения
+    function updateGallery() {
+        // Скрываем все изображения
+        images.forEach(img => img.style.display = 'none');
+        
+        // Показываем текущее изображение
+        if (images[currentIndex]) {
+            images[currentIndex].style.display = 'block';
+        }
+        
+        // Обновляем активную миниатюру
+        thumbnails.forEach((thumb, index) => {
+            thumb.classList.remove('active');
+            if (index === currentIndex) {
+                thumb.classList.add('active');
+            }
+        });
+        
+        // Обновляем счетчик
+        if (imageCounter && images.length > 0) {
+            imageCounter.innerHTML = `
+                <span class="material-icons" style="font-size: 14px; margin-right: 4px;">camera_alt</span>
+                ${currentIndex + 1} з ${images.length}
+            `;
+        }
+    }
+
+    // Инициализация галереи
+    if (images.length > 0) {
+        updateGallery();
+        
+        // Если только одно изображение - скрываем кнопки навигации
+        if (images.length === 1) {
+            prevBtn.style.display = 'none';
+            nextBtn.style.display = 'none';
+        } else {
+            // Обработчик кнопки "назад"
+            prevBtn.addEventListener('click', () => {
+                currentIndex = (currentIndex - 1 + images.length) % images.length;
+                updateGallery();
+            });
+            
+            // Обработчик кнопки "вперед"
+            nextBtn.addEventListener('click', () => {
+                currentIndex = (currentIndex + 1) % images.length;
+                updateGallery();
+            });
+        }
+        
+        // Клик по миниатюрам
+        thumbnails.forEach((thumb, index) => {
+            if (index < images.length) {
+                thumb.style.cursor = 'pointer';
+                thumb.addEventListener('click', () => {
+                    currentIndex = index;
+                    updateGallery();
+                });
+            }
+        });
+        
+        // Поддержка клавиатуры (стрелки влево/вправо)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                currentIndex = (currentIndex - 1 + images.length) % images.length;
+                updateGallery();
+            } else if (e.key === 'ArrowRight') {
+                currentIndex = (currentIndex + 1) % images.length;
+                updateGallery();
+            }
+        });
+    }
+</script> 
 {% endblock %}

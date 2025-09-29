@@ -17,7 +17,7 @@ def get_client_ip(request):
 
 def main_view(request):
     cars=Cars.objects.all()
-    paginator=Paginator(cars,1)
+    paginator=Paginator(cars,5)
     page_number=request.GET.get('page')
     page_obj=paginator.get_page(page_number)
     brands=CarBrand.objects.all()

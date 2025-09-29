@@ -1,6 +1,6 @@
 import datetime
 from django.shortcuts import redirect, render
-from main.models import CarBrand
+from main.models import CarBrand,CarImage
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from . forms import AddCarform
@@ -10,13 +10,27 @@ from django.utils.text import slugify
 def add_car(request):
     print(request)
     if request.method=='POST':
-        form=AddCarform(request.POST,request.FILES)
+        form=AddCarform(request.POST)
         if form.is_valid():
             car=form.save(commit=False)
             car.owner=request.user
             car.save()
             car.slug=slugify(f'{car.brand}-{car.model}-{car.id}')
             car.save(update_fields=['slug'])
+            images=request.FILES.getlist('images')
+            # print(request.FILES)
+            print(images)
+            if len(images)>15:
+                images=images[:15]
+            for ind , image in enumerate(images):
+                print(f'Сохраняю фото:{ind+1}')
+                CarImage.objects.create(
+                    car=car,
+                    image=image
+                )
+                if ind==0:
+                    car.image=image
+                    car.save(update_fields=['image'])
             return redirect('main:main')
     else:
         form=AddCarform()

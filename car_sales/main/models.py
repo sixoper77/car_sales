@@ -89,5 +89,11 @@ class CarViews(models.Model):
     user=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,null=True,blank=True)
     viewed_at=models.DateTimeField(default=timezone.now)
     
+
+class CarImage(models.Model):
+    car=models.ForeignKey(Cars,related_name='images',on_delete=models.CASCADE)
+    image=models.ImageField(upload_to="products/%Y/%m/%d", blank=True)
     
+    def __str__(self):
+        return f'{self.car.model}-{self.image.name}'
     

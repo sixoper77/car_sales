@@ -126,7 +126,11 @@
                 <div class="car-card">
                     <div class="car-image">
                         <div class="placeholder-image">
-                            <img src="{{car.image.url}}" alt="" class="card-image">
+                            {% if car.image %}
+                                <img src="{{car.image.url}}" alt="" class="card-image">
+                            {% elif car.images.first %}
+                                <img src="{{car.images.first.image.url}}" alt="" class="card-image">
+                            {% endif %}
                         </div>
                         <div class="car-badge">ТОП</div>
                     </div>
