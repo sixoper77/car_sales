@@ -19,3 +19,4 @@ img/
 .env
 fixtures/
 products/
+dump.py
