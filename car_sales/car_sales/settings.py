@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'sale',
     'scheduler',
     'search',
+    'chat',
 ]
 
 MIDDLEWARE = [
