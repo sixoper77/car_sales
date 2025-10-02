@@ -1,0 +1,78 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% load humanize %}
+{% block title %}Результати пошуку - AutoSale{% endblock %}
+
+{% block content %}
+<!-- Results Header Section -->
+<section class="results-header">
+    <div class="container">
+        <div class="results-info">
+            <h1>Результати пошуку</h1>
+            <p>Знайдено автомобілів: {{ page_obj.paginator.count }}</p>
+        </div>
+        
+        <!-- Sort Options -->
+        <div class="sort-options">
+            <select class="sort-select" onchange="sortResults(this.value)">
+                <option value="">Сортувати за</option>
+                <option value="price_asc">Ціна: від низької до високої</option>
+                <option value="price_desc">Ціна: від високої до низької</option>
+                <option value="year_desc">Рік: спочатку новіші</option>
+                <option value="year_asc">Рік: спочатку старіші</option>
+            </select>
+        </div>
+    </div>
+</section>
+
+<!-- Cars Grid Section -->
+<section class="featured-section">
+    <div class="container">
+        <div class="cars-grid">
+            {% for car in page_obj %}
+                <div class="car-card">
+                    <div class="car-image">
+                        <div class="placeholder-image">
+                            <img src="{{car.image.url}}" alt="{{car.brand}} {{car.model}}" class="card-image">
+                        </div>
+                        <div class="car-badge">ТОП</div>
+                    </div>
+                    <div class="car-info">
+                        <a href="{{ car.get_absolute_url }}">
+                            <h3>{{car.brand}}-{{car.model}}-{{car.year}}</h3>
+                        </a>
+                        <p class="car-details">Owner: {{car.owner}} color:{{car.color}}</p>
+                        <p class="car-price">${{car.price|intcomma}}</p>
+                        <div class="car-location">
+                            <span class="material-icons">location_on</span>
+                            {{car.region}}
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="no-results">
+                    <div class="no-results-content">
+                        <span class="material-icons no-results-icon">search_off</span>
+                        <h3>Нічого не знайдено</h3>
+                        <p>Спробуйте змінити параметри пошуку</p>
+                        <a href="{% url 'main:main' %}" class="btn-primary">Повернутись до головної</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <ul class="pagination">
+            <li class="{% if not page_obj.has_previous %}disabled{% endif %}">
+                <a href="{% if page_obj.has_previous %}?page={{ page_obj.previous_page_number }}{% endif %}">Previous</a>
+            </li>
+            {% for page in page_obj.paginator.page_range  %}
+            {% if page >= page_obj.number|add:-2 and page <= page_obj.number|add:2%}
+                <li>
+                    <a href="?page={{page}}"class="{% if page_obj.number == page %}disabled{% endif %}">{{page}}</a>
+                </li>
+                {% endif %}
+            {% endfor %}
+            <li class="{% if not page_obj.has_next %}disabled{% endif %}">
+                <a href="{% if page_obj.has_next %}?page={{page_obj.next_page_number}}{% endif %}">Next</a>
+            </li>
+        </ul>
+{% endblock %}

@@ -16,7 +16,7 @@ def get_client_ip(request):
     
 
 def main_view(request):
-    cars=Cars.objects.all()
+    cars=Cars.objects.all().order_by('-id')
     paginator=Paginator(cars,5)
     page_number=request.GET.get('page')
     page_obj=paginator.get_page(page_number)
@@ -35,7 +35,6 @@ def get_models(request,slug):
         return JsonResponse([], safe=False)
     
 def model_detail(request,slug):
-    
     car=Cars.objects.get(slug=slug)
     ip=get_client_ip(request)
     if request.user.is_authenticated:

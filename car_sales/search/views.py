@@ -43,3 +43,17 @@ def search(request):
     page_number=request.GET.get('page')
     page_obj=paginator.get_page(page_number)
     return render(request,'search/search.html',{'page_obj':page_obj})
+
+def use(request):
+    cars=Cars.objects.filter(used=True).order_by('-id')
+    paginator=Paginator(cars,5)
+    page_number=request.GET.get('page')
+    page_obj=paginator.get_page(page_number)
+    return render(request,'search/use.html',{'page_obj':page_obj})    
+
+def new(request):
+    cars=Cars.objects.filter(used=False).order_by('-id')
+    paginator=Paginator(cars,5)
+    page_number=request.GET.get('page')
+    page_obj=paginator.get_page(page_number)
+    return render(request,'search/new.html',{'page_obj':page_obj})    
