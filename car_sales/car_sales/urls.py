@@ -25,7 +25,7 @@ urlpatterns = [
     path('users/',include('users.urls',namespace='users')),
     path('sale/',include('sale.urls',namespace='sale')),
     path('search/',include('search.urls',namespace='search')),
-    # path('chat/',include('chat.urls',namespace='chat'))
+    path('chat/',include('chat.urls',namespace='chat')),
 ]
 
 if settings.DEBUG:
