@@ -1812,10 +1812,10 @@ body {
 }
 
 .card-image {
-    width: 100%;          /* растягиваем на ширину карточки */
-    height: 210px;        /* задаём высоту карточки (подбери своё значение) */
-    object-fit: cover;    /* чтобы картинка обрезалась по краям, но не искажалась */
-    border-radius: 12px;  /* если нужно закругление углов как у карточки */
+    width: 100%;          /* Ñ€Ð°ÑÑ‚ÑÐ³Ð¸Ð²Ð°ÐµÐ¼ Ð½Ð° ÑˆÐ¸Ñ€Ð¸Ð½Ñƒ ÐºÐ°Ñ€Ñ‚Ð¾Ñ‡ÐºÐ¸ */
+    height: 210px;        /* Ð·Ð°Ð´Ð°Ñ‘Ð¼ Ð²Ñ‹ÑÐ¾Ñ‚Ñƒ ÐºÐ°Ñ€Ñ‚Ð¾Ñ‡ÐºÐ¸ (Ð¿Ð¾Ð´Ð±ÐµÑ€Ð¸ ÑÐ²Ð¾Ñ‘ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ) */
+    object-fit: cover;    /* Ñ‡Ñ‚Ð¾Ð±Ñ‹ ÐºÐ°Ñ€Ñ‚Ð¸Ð½ÐºÐ° Ð¾Ð±Ñ€ÐµÐ·Ð°Ð»Ð°ÑÑŒ Ð¿Ð¾ ÐºÑ€Ð°ÑÐ¼, Ð½Ð¾ Ð½Ðµ Ð¸ÑÐºÐ°Ð¶Ð°Ð»Ð°ÑÑŒ */
+    border-radius: 12px;  /* ÐµÑÐ»Ð¸ Ð½ÑƒÐ¶Ð½Ð¾ Ð·Ð°ÐºÑ€ÑƒÐ³Ð»ÐµÐ½Ð¸Ðµ ÑƒÐ³Ð»Ð¾Ð² ÐºÐ°Ðº Ñƒ ÐºÐ°Ñ€Ñ‚Ð¾Ñ‡ÐºÐ¸ */
 }
 
 /* Car Detail Page Specific Styles */
@@ -2306,11 +2306,11 @@ body {
 
 .pagination {
     display: flex;
-    justify-content: center; /* Центрування по горизонталі */
+    justify-content: center; /* Ð¦ÐµÐ½Ñ‚Ñ€ÑƒÐ²Ð°Ð½Ð½Ñ Ð¿Ð¾ Ð³Ð¾Ñ€Ð¸Ð·Ð¾Ð½Ñ‚Ð°Ð»Ñ– */
     align-items: center;
     gap: 8px;
     list-style: none;
-    margin: 20px 0; /* Додав відступи зверху і знизу */
+    margin: 20px 0; /* Ð”Ð¾Ð´Ð°Ð² Ð²Ñ–Ð´ÑÑ‚ÑƒÐ¿Ð¸ Ð·Ð²ÐµÑ€Ñ…Ñƒ Ñ– Ð·Ð½Ð¸Ð·Ñƒ */
     padding: 0;
 }
 
@@ -2345,7 +2345,7 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Стиль для активної сторінки */
+/* Ð¡Ñ‚Ð¸Ð»ÑŒ Ð´Ð»Ñ Ð°ÐºÑ‚Ð¸Ð²Ð½Ð¾Ñ— ÑÑ‚Ð¾Ñ€Ñ–Ð½ÐºÐ¸ */
 .pagination li a.disabled {
     background: #ef4444;
     color: white;
@@ -2354,7 +2354,7 @@ body {
     cursor: default;
 }
 
-/* Стиль для неактивних кнопок (Previous/Next) */
+/* Ð¡Ñ‚Ð¸Ð»ÑŒ Ð´Ð»Ñ Ð½ÐµÐ°ÐºÑ‚Ð¸Ð²Ð½Ð¸Ñ… ÐºÐ½Ð¾Ð¿Ð¾Ðº (Previous/Next) */
 .pagination li.disabled a {
     background: #f9fafb;
     color: #d1d5db;
@@ -2388,7 +2388,7 @@ input[name="mileage"] {
     background: transparent;
 }
 
-/* Белый цвет для placeholder текста */
+/* Ð‘ÐµÐ»Ñ‹Ð¹ Ñ†Ð²ÐµÑ‚ Ð´Ð»Ñ placeholder Ñ‚ÐµÐºÑÑ‚Ð° */
 .price-input::placeholder,
 .form-input::placeholder,
 input[type="number"]::placeholder,
@@ -2396,7 +2396,7 @@ input[type="text"]::placeholder {
     color: rgba(255, 255, 255, 0.7) !important;
 }
 
-/* Убираем автозаполнение фона браузера */
+/* Ð£Ð±Ð¸Ñ€Ð°ÐµÐ¼ Ð°Ð²Ñ‚Ð¾Ð·Ð°Ð¿Ð¾Ð»Ð½ÐµÐ½Ð¸Ðµ Ñ„Ð¾Ð½Ð° Ð±Ñ€Ð°ÑƒÐ·ÐµÑ€Ð° */
 .price-input:-webkit-autofill,
 .form-input:-webkit-autofill,
 input[type="number"]:-webkit-autofill,
@@ -2405,7 +2405,7 @@ input[type="text"]:-webkit-autofill {
     -webkit-text-fill-color: white !important;
 }
 
-/* Для Firefox */
+/* Ð”Ð»Ñ Firefox */
 .price-input:-moz-autofill,
 .form-input:-moz-autofill,
 input[type="number"]:-moz-autofill,

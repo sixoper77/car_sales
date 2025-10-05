@@ -1,19 +1,14 @@
 from django.db import models
 from django.conf import settings
-class GroupName(models.Model):
-    group_name=models.CharField(max_length=132,unique=True)
-    
-    def __str__(self):
-        return self.group_name
-    
-class GroupMessages(models.Model):
-    group=models.ForeignKey(GroupName,related_name='chat_messages',on_delete=models.CASCADE)
-    author=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
-    body=models.CharField(max_length=255)
-    created=models.DateTimeField(auto_now_add=True)
-    
-    def __str__(self):
-        return f"{self.author.username}:{self.body}"
+
+class Message(models.Model):
+    sender=models.ForeignKey(settings.AUTH_USER_MODEL,related_name='sent_message',on_delete=models.CASCADE)
+    recipient=models.ForeignKey(settings.AUTH_USER_MODEL,related_name='recived_message',on_delete=models.CASCADE)
+    body=models.TextField()
+    timestamp=models.DateTimeField(auto_now_add=True)
     
     class Meta:
-        ordering=['-created']
+        ordering=['timestamp']
+        
+    def __str__(self):
+        return f'{self.sender}-{self.recipient}-{self.body}'

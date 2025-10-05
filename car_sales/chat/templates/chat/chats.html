@@ -3,6 +3,9 @@
 
 {% block title %}Чат - AutoSale{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/chat.css' %}">
+{% endblock %}
 
 {% block content %}
 <div class="chat-container">
@@ -17,32 +20,32 @@
         </div>
 
         <div class="chat-list" id="chatList">
-            {% if chats %}
-                {% for chat in chats %}
-                <div class="chat-item {% if chat.id == active_chat_id %}active{% endif %}" data-chat-id="{{ chat.id }}">
-                    <div class="chat-avatar">
-                        {% if chat.other_user.avatar %}
-                            <img src="{{ chat.other_user.avatar.url }}" alt="{{ chat.other_user.username }}">
-                        {% else %}
-                            {{ chat.other_user.username|slice:":1"|upper }}
-                        {% endif %}
-                    </div>
-                    <div class="chat-info">
-                        <div class="chat-top">
-                            <span class="chat-name">{{ chat.other_user.username }}</span>
-                            <span class="chat-time">{{ chat.last_message_time|date:"H:i" }}</span>
+            {% if user_last_messages %}
+                {% for item in user_last_messages %}
+                    {% if item.last_message %}
+                        <div class="chat-item {% if item.user.username == user %}active{% endif %}" 
+                             onclick="window.location.href='{% url 'chat:chats' item.user.username %}'">
+                            <div class="chat-avatar">
+                                {% if item.user.avatar %}
+                                    <img src="{{ item.user.avatar.url }}" alt="{{ item.user.username }}">
+                                {% else %}
+                                    {{ item.user.username|slice:":1"|upper }}
+                                {% endif %}
+                            </div>
+                            <div class="chat-info">
+                                <div class="chat-top">
+                                    <span class="chat-name">{{ item.user.username }}</span>
+                                    <span class="chat-time">{{ item.last_message.timestamp|date:"H:i" }}</span>
+                                </div>
+                                <div class="chat-preview">
+                                    {% if item.last_message.sender == request.user %}
+                                        <span class="material-icons">done_all</span>
+                                    {% endif %}
+                                    {{ item.last_message.body|truncatewords:5 }}
+                                </div>
+                            </div>
                         </div>
-                        <div class="chat-preview">
-                            {% if chat.last_message.sender == user %}
-                                <span class="material-icons">done_all</span>
-                            {% endif %}
-                            {{ chat.last_message.text|truncatewords:5 }}
-                        </div>
-                    </div>
-                    {% if chat.unread_count > 0 %}
-                        <span class="unread-badge">{{ chat.unread_count }}</span>
                     {% endif %}
-                </div>
                 {% endfor %}
             {% else %}
                 <div class="empty-state">
@@ -56,26 +59,16 @@
 
     <!-- Chat area -->
     <div class="chat-area" id="chatArea">
-        {% if active_chat %}
+        {% if user %}
             <!-- Chat header -->
             <div class="chat-header">
                 <div class="chat-user-info">
                     <div class="chat-user-avatar">
-                        {% if active_chat.other_user.avatar %}
-                            <img src="{{ active_chat.other_user.avatar.url }}" alt="{{ active_chat.other_user.username }}">
-                        {% else %}
-                            {{ active_chat.other_user.username|slice:":1"|upper }}
-                        {% endif %}
+                        {{ user|slice:":1"|upper }}
                     </div>
                     <div class="chat-user-details">
-                        <h3>{{ active_chat.other_user.username }}</h3>
-                        <span class="chat-user-status {% if active_chat.other_user.is_online %}online{% endif %}">
-                            {% if active_chat.other_user.is_online %}
-                                онлайн
-                            {% else %}
-                                був(ла) {{ active_chat.other_user.last_seen|timesince }} тому
-                            {% endif %}
-                        </span>
+                        <h3>{{ user }}</h3>
+                        <span class="chat-user-status">онлайн</span>
                     </div>
                 </div>
                 <div class="chat-header-actions">
@@ -90,14 +83,8 @@
 
             <!-- Messages area -->
             <div class="messages-area" id="messagesArea">
-                {% for message in messages %}
-                    {% comment %} {% if forloop.first or message.created_at.date != messages|slice:forloop.counter0|last.created_at.date %} {% endcomment %}
-                        <div class="date-separator">
-                            <span>{{ message.created_at|date:"d E Y" }}</span>
-                        </div>
-                    
-
-                    <div class="message {% if message.sender == user %}own{% endif %}">
+                {% for message in chats %}
+                    <div class="message {% if message.sender == request.user %}own{% endif %}">
                         <div class="message-avatar">
                             {% if message.sender.avatar %}
                                 <img src="{{ message.sender.avatar.url }}" alt="{{ message.sender.username }}">
@@ -107,19 +94,13 @@
                         </div>
                         <div class="message-content">
                             <div class="message-bubble">
-                                {{ message.text }}
+                                {{ message.body }}
                             </div>
                             <div class="message-meta">
-                                <span class="message-time">{{ message.created_at|date:"H:i" }}</span>
-                                {% if message.sender == user %}
+                                <span class="message-time">{{ message.timestamp|date:"H:i" }}</span>
+                                {% if message.sender == request.user %}
                                     <div class="message-status">
-                                        <span class="material-icons {% if message.is_read %}read{% endif %}">
-                                            {% if message.is_read %}
-                                                done_all
-                                            {% else %}
-                                                done
-                                            {% endif %}
-                                        </span>
+                                        <span class="material-icons">done_all</span>
                                     </div>
                                 {% endif %}
                             </div>
@@ -130,26 +111,22 @@
 
             <!-- Message input -->
             <div class="message-input-area">
-                <form id="messageForm" method="post" action="{% url 'chat:send_message' active_chat.id %}">
-                    {% csrf_token %}
-                    <div class="message-input-container">
-                        <textarea 
-                            class="message-input" 
-                            name="message_text" 
-                            placeholder="Написати повідомлення..." 
-                            rows="1"
-                            id="messageInput"
-                        ></textarea>
-                        <div class="input-actions">
-                            <button type="button" class="attach-btn" title="Прикріпити файл">
-                                <span class="material-icons">attach_file</span>
-                            </button>
-                            <button type="submit" class="send-btn" id="sendBtn">
-                                <span class="material-icons">send</span>
-                            </button>
-                        </div>
+                <div class="message-input-container">
+                    <textarea 
+                        class="message-input" 
+                        placeholder="Написати повідомлення..." 
+                        rows="1"
+                        id="msg"
+                    ></textarea>
+                    <div class="input-actions">
+                        <button type="button" class="attach-btn" title="Прикріпити файл">
+                            <span class="material-icons">attach_file</span>
+                        </button>
+                        <button type="button" class="send-btn" id="send">
+                            <span class="material-icons">send</span>
+                        </button>
                     </div>
-                </form>
+                </div>
             </div>
         {% else %}
             <!-- Empty chat state -->
@@ -166,6 +143,105 @@
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    {% if user %}
+    // WebSocket connection
+    const chatSocket = new WebSocket(
+        'ws://' + window.location.host + '/ws/chat/{{ user }}/'
+    );
+
+    chatSocket.onopen = function(e) {
+        console.log('WebSocket connection established');
+    };
+
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        console.log(data.sender + ': ' + data.message);
+        
+        // Add received message to chat
+        addMessageToChat(data);
+    };
+
+    chatSocket.onerror = function(e) {
+        console.error('WebSocket error:', e);
+    };
+
+    chatSocket.onclose = function(e) {
+        console.log('WebSocket connection closed');
+    };
+
+    // Send message handler
+    const sendBtn = document.getElementById('send');
+    const messageInput = document.getElementById('msg');
+
+    sendBtn.onclick = function() {
+        const message = messageInput.value.trim();
+        
+        if (message) {
+            chatSocket.send(JSON.stringify({
+                'message': message
+            }));
+            
+            messageInput.value = '';
+            messageInput.style.height = 'auto';
+        }
+    };
+
+    // Send on Enter (Shift+Enter for new line)
+    messageInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendBtn.click();
+        }
+    });
+
+    // Auto-resize textarea
+    messageInput.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+    });
+
+    // Add message to chat UI
+    function addMessageToChat(data) {
+        const messagesArea = document.getElementById('messagesArea');
+        const isOwnMessage = data.sender === '{{ request.user.username }}';
+        
+        const now = new Date();
+        const time = now.getHours().toString().padStart(2, '0') + ':' + 
+                     now.getMinutes().toString().padStart(2, '0');
+        
+        const messageHTML = `
+            <div class="message ${isOwnMessage ? 'own' : ''}">
+                <div class="message-avatar">
+                    ${data.sender.charAt(0).toUpperCase()}
+                </div>
+                <div class="message-content">
+                    <div class="message-bubble">
+                        ${escapeHtml(data.message)}
+                    </div>
+                    <div class="message-meta">
+                        <span class="message-time">${time}</span>
+                        ${isOwnMessage ? `
+                            <div class="message-status">
+                                <span class="material-icons">done</span>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        messagesArea.insertAdjacentHTML('beforeend', messageHTML);
+        messagesArea.scrollTop = messagesArea.scrollHeight;
+    }
+
+    // Escape HTML to prevent XSS
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+    {% endif %}
+
     // Chat search functionality
     const chatSearch = document.getElementById('chatSearch');
     const chatItems = document.querySelectorAll('.chat-item');
@@ -185,93 +261,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Auto-resize textarea
-    const messageInput = document.getElementById('messageInput');
-    if (messageInput) {
-        messageInput.addEventListener('input', function() {
-            this.style.height = 'auto';
-            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
-        });
-
-        // Send message on Enter (Shift+Enter for new line)
-        messageInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                document.getElementById('messageForm').submit();
-            }
-        });
-    }
-
     // Scroll to bottom of messages
     const messagesArea = document.getElementById('messagesArea');
     if (messagesArea) {
-        messagesArea.scrollTop = messagesArea.scrollHeight;
-    }
-
-    // Chat item click handler
-    chatItems.forEach(item => {
-        item.addEventListener('click', function() {
-            const chatId = this.dataset.chatId;
-            window.location.href = `/chat/${chatId}/`;
-        });
-    });
-
-    // AJAX form submission (optional)
-    const messageForm = document.getElementById('messageForm');
-    if (messageForm) {
-        messageForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(this);
-            const messageText = formData.get('message_text').trim();
-            
-            if (!messageText) return;
-
-            // Send via AJAX
-            fetch(this.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRFToken': formData.get('csrfmiddlewaretoken')
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Add message to chat
-                    addMessageToChat(data.message);
-                    messageInput.value = '';
-                    messageInput.style.height = 'auto';
-                }
-            })
-            .catch(error => console.error('Error:', error));
-        });
-    }
-
-    function addMessageToChat(message) {
-        const messagesArea = document.getElementById('messagesArea');
-        const messageHTML = `
-            <div class="message own">
-                <div class="message-avatar">
-                    ${message.sender_avatar ? 
-                        `<img src="${message.sender_avatar}" alt="${message.sender_name}">` : 
-                        message.sender_name.charAt(0).toUpperCase()
-                    }
-                </div>
-                <div class="message-content">
-                    <div class="message-bubble">
-                        ${message.text}
-                    </div>
-                    <div class="message-meta">
-                        <span class="message-time">${message.time}</span>
-                        <div class="message-status">
-                            <span class="material-icons">done</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-        messagesArea.insertAdjacentHTML('beforeend', messageHTML);
         messagesArea.scrollTop = messagesArea.scrollHeight;
     }
 });

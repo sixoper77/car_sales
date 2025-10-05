@@ -57,18 +57,19 @@
                 <span class="phone-toggle">показати</span>
             </div>
         </div>
-
+        {% if user != car.owner %}
         <div class="action-buttons">
-            <button class="btn-chat">
+            <a class="btn-chat" href="{% url "chat:chats" car.owner.username %}">
                 <span class="material-icons">message</span>
                 Написати в чат
-            </button>
+            </a>
             <button class="btn-callback">
                 <span class="material-icons">phone_callback</span>
                 Передзвонити авто
             </button>
             <div class="callback-hours">Тільки • По 11:00-20:00</div>
         </div>
+        {% endif %}
     </div>
 
     <!-- Right Panel - Images and Details -->
