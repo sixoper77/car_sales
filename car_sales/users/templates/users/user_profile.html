@@ -1,0 +1,175 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Профіль користувача - AutoSale{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/base.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-card">
+        <!-- Success/Error Messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message-alert {{ message.tags }}">
+                    <span class="material-icons">
+                        {% if message.tags == 'success' %}check_circle{% else %}error{% endif %}
+                    </span>
+                    <span>{{ message }}</span>
+                    <button type="button" class="close-btn" onclick="this.parentElement.remove()">
+                        <span class="material-icons">close</span>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Profile Avatar -->
+        <div class="profile-avatar-section">
+            <div class="profile-avatar">
+                {% if user.image %}
+                    <img src="{{ user.image.url }}" alt="Фото профілю" class="avatar-image" id="avatarPreview">
+                {% else %}
+                    <span class="material-icons" id="defaultAvatar">person</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Profile Information (Read-only) -->
+        <div class="profile-form-fields">
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Ім'я</label>
+                    <div class="input-container">
+                        <span class="material-icons input-icon">person</span>
+                        <input 
+                            type="text" 
+                            class="form-input"
+                            value="{{ user.first_name|default:'Не вказано' }}"
+                            readonly
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Прізвище</label>
+                    <div class="input-container">
+                        <span class="material-icons input-icon">person</span>
+                        <input 
+                            type="text" 
+                            class="form-input"
+                            value="{{ user.last_name|default:'Не вказано' }}"
+                            readonly
+                        >
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Ім'я користувача</label>
+                    <div class="input-container">
+                        <span class="material-icons input-icon">alternate_email</span>
+                        <input 
+                            type="text" 
+                            class="form-input"
+                            value="{{ user.username }}"
+                            readonly
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <div class="input-container">
+                        <span class="material-icons input-icon">email</span>
+                        <input 
+                            type="email" 
+                            class="form-input"
+                            value="{{ user.email|default:'Не вказано' }}"
+                            readonly
+                        >
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Stats -->
+        <div class="profile-stats">
+            <div class="stat-item">
+                <span class="stat-number">{{ user.car_set.count|default:0 }}</span>
+                <span class="stat-label">Оголошень</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">{{ user.car_set.sold.count|default:0 }}</span>
+                <span class="stat-label">Продано</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">{{ user.date_joined|date:"M Y" }}</span>
+                <span class="stat-label">З нами з</span>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="profile-actions">
+            <div class="action-row">
+                <a href="" class="btn-secondary">
+                    <span class="material-icons">directions_car</span>
+                    Мої авто
+                </a>
+                
+                <a href="" class="btn-secondary">
+                    <span class="material-icons">favorite</span>
+                    Обрані
+                </a>
+            </div>
+        </div>
+    </div>
+            
+    <!-- User Cars Section -->
+    {% if user.car_set.exists %}
+    <div class="user-cars-section">
+        <h3 class="section-title">
+            <span class="material-icons">directions_car</span>
+            Ваші оголошення
+        </h3>
+        
+        <div class="cars-preview">
+            {% for car in user.car_set.all|slice:":3" %}
+            <div class="car-preview-card" onclick="location.href='{% url 'cars:detail' car.pk %}'">
+                <div class="car-preview-image">
+                    {% if car.image %}
+                        <img src="{{ car.image.url }}" alt="{{ car.title }}">
+                    {% else %}
+                        <span class="material-icons">directions_car</span>
+                    {% endif %}
+                </div>
+                <div class="car-preview-info">
+                    <h4>{{ car.title }}</h4>
+                    <p class="car-preview-price">${{ car.price|floatformat:0 }}</p>
+                    <p class="car-preview-status">
+                        {% if car.is_sold %}
+                            <span class="badge-sold">Продано</span>
+                        {% else %}
+                            <span class="badge-active">Активне</span>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        {% if user.car_set.count > 3 %}
+        <div class="cars-more">
+            <a href="" class="btn-text">
+                Переглянути всі ({{ user.car_set.count }})
+                <span class="material-icons">arrow_forward</span>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

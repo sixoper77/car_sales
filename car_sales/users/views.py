@@ -19,8 +19,9 @@ def profile(request):
     return render(request,'users/profile.html',{'form':form})
     
 @login_required
-def user_profile(request,user):
-    user=User.objects.get(id=user.id)
-    return render(request,'users/user_profile.html')
+def user_profile(request,username):
+    user=User.objects.get(username=username)
+    
+    return render(request,'users/user_profile.html',{'user':user})
     
         

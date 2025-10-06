@@ -33,7 +33,9 @@
             <div class="seller-info">
                 <div class="seller-avatar">{{ car.owner.username|slice:":2"|upper }}</div>
                 <div class="seller-details">
-                    <h4>{{ car.owner.username }}</h4>
+                    <a href="{% url "users:profile_" car.owner.username %}">
+                        <h4>{{ car.owner.username }}</h4>
+                    </a>
                     <div class="seller-online">Был в сети {{car.owner.last_active|date:"d.m.Y H:i"}}</div>
                 </div>
             </div>

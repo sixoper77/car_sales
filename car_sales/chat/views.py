@@ -10,6 +10,7 @@ from django.utils import timezone
 def chats_view(request, user=None):
     users = User.objects.exclude(id=request.user.id)
     chats=[]
+    chat_user=[]
     if user:
         chat_user=get_object_or_404(User,username=user)
         chats = Message.objects.filter(
