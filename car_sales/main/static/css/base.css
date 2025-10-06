@@ -3250,3 +3250,41 @@ input[type="text"]:-moz-autofill {
         padding: 12px 16px;
     }
 }
+
+
+
+
+
+
+.chat-page-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    height: calc(100vh - 64px);
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    background: #0f0f0f;
+    overflow: hidden;
+}
+
+/* Chat-specific area */
+.chat-message-area {
+    display: flex;
+    flex-direction: column;
+    background: #0f0f0f;
+    height: 100%;
+    max-height: calc(100vh - 64px);
+}
+
+/* Chat messages scroll area */
+.chat-messages-scroll {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    scrollbar-width: thin;
+    scrollbar-color: #3d3d3d #0f0f0f;
+    max-height: calc(100vh - 64px - 76px - 88px);
+}

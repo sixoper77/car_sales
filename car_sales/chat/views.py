@@ -7,13 +7,16 @@ from django.db.models import Q
 from django.utils import timezone
 
 @login_required
-def chats_view(request, user):
+def chats_view(request, user=None):
     users = User.objects.exclude(id=request.user.id)
-    chats = Message.objects.filter(
-        (Q(sender=request.user) & Q(recipient__username=user)) |
-        (Q(recipient=request.user) & Q(sender__username=user)) 
-    )
-    chats = chats.order_by('timestamp')
+    chats=[]
+    if user:
+        chat_user=get_object_or_404(User,username=user)
+        chats = Message.objects.filter(
+            (Q(sender=request.user) & Q(recipient__username=user)) |
+            (Q(recipient=request.user) & Q(sender__username=user)) 
+        )
+        chats = chats.order_by('timestamp')
     
     user_last_messages = []
     for usr in users:
@@ -38,5 +41,6 @@ def chats_view(request, user):
         'user': user,
         'chats': chats,
         'users': users,
-        'user_last_messages': user_last_messages
+        'user_last_messages': user_last_messages,
+        'chat_user':chat_user
     })

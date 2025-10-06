@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="chat-container">
+<div class="chat-page-container">
     <!-- Sidebar with chat list -->
     <aside class="chat-sidebar">
         <div class="sidebar-header">
@@ -26,8 +26,8 @@
                         <div class="chat-item {% if item.user.username == user %}active{% endif %}" 
                              onclick="window.location.href='{% url 'chat:chats' item.user.username %}'">
                             <div class="chat-avatar">
-                                {% if item.user.avatar %}
-                                    <img src="{{ item.user.avatar.url }}" alt="{{ item.user.username }}">
+                                {% if item.user.image %}
+                                    <img src="{{ item.user.image.url }}" alt="{{ item.user.username }}">
                                 {% else %}
                                     {{ item.user.username|slice:":1"|upper }}
                                 {% endif %}
@@ -58,13 +58,16 @@
     </aside>
 
     <!-- Chat area -->
-    <div class="chat-area" id="chatArea">
+    <div class="chat-message-area" id="chatArea">
         {% if user %}
             <!-- Chat header -->
             <div class="chat-header">
                 <div class="chat-user-info">
                     <div class="chat-user-avatar">
-                        {{ user|slice:":1"|upper }}
+                        {% if chat_user.image %}
+                            <img src="{{ chat_user.image.url }}">
+                        {% endif %}
+                        {% comment %} {{ user|slice:":1"|upper }} {% endcomment %}
                     </div>
                     <div class="chat-user-details">
                         <h3>{{ user }}</h3>
@@ -82,12 +85,12 @@
             </div>
 
             <!-- Messages area -->
-            <div class="messages-area" id="messagesArea">
+            <div class="chat-messages-scroll" id="messagesArea">
                 {% for message in chats %}
                     <div class="message {% if message.sender == request.user %}own{% endif %}">
                         <div class="message-avatar">
-                            {% if message.sender.avatar %}
-                                <img src="{{ message.sender.avatar.url }}" alt="{{ message.sender.username }}">
+                            {% if message.sender.image %}
+                                <img src="{{ message.sender.image.url }}" alt="{{ message.sender.username }}">
                             {% else %}
                                 {{ message.sender.username|slice:":1"|upper }}
                             {% endif %}
