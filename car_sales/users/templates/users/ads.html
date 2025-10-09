@@ -1,0 +1,96 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% load humanize %}
+{% block title %}Мої оголошення - AutoSale{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <div class="hero-text">
+            <h1>Мої оголошення</h1>
+            <p>Керуйте своїми оголошеннями про продаж автомобілів</p>
+        </div>
+    </div>
+</section>
+
+<!-- User Cars Section -->
+<section class="featured-section">
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 48px;">
+            <h2>Активні оголошення</h2>
+            <a href="#" class="btn-primary">
+                <span class="material-icons">add</span>
+                Додати оголошення
+            </a>
+        </div>
+        
+        <div class="cars-grid">
+            {% for car in page_obj %}
+                <div class="car-card">
+                    <div class="car-image">
+                        <div class="placeholder-image">
+                            {% if car.image %}
+                                <img src="{{car.image.url}}" alt="" class="card-image">
+                            {% elif car.images.first %}
+                                <img src="{{car.images.first.image.url}}" alt="" class="card-image">
+                            {% endif %}
+                        </div>
+                        {% if car.is_sold %}
+                            <div class="car-badge">ПРОДАНО</div>
+                        {% else %}
+                            <div class="car-badge new">АКТИВНЕ</div>
+                        {% endif %}
+                    </div>
+                    <div class="car-info">
+                        <a href="{{ car.get_absolute_url }}">
+                            <h3>{{car.brand}} {{car.model}} {{car.year}}</h3>
+                        </a>
+                        <p class="car-details">{{car.color}} • {{car.mileage|intcomma}} км</p>
+                        <p class="car-price">${{car.price|intcomma}}</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div class="car-location">
+                                <span class="material-icons">location_on</span>
+                                {{car.region}}
+                            </div>
+                            <a href="{% url "sale:update-ad" car.id %}" class="edit-icon" title="Редагувати">
+                                <span class="material-icons">edit</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="no-results-content" style="grid-column: 1 / -1; text-align: center; padding: 60px 20px;">
+                    <span class="material-icons no-results-icon">directions_car</span>
+                    <h3>У вас ще немає оголошень</h3>
+                    <p>Почніть продавати свій автомобіль прямо зараз!</p>
+                    <a href="{% url 'add-car' %}" class="btn-primary" style="margin-top: 20px;">
+                        <span class="material-icons">add</span>
+                        Додати перше оголошення
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if page_obj.has_other_pages %}
+        <ul class="pagination">
+            <li class="{% if not page_obj.has_previous %}disabled{% endif %}">
+                <a href="{% if page_obj.has_previous %}?page={{ page_obj.previous_page_number }}{% endif %}">Previous</a>
+            </li>
+            {% for page in page_obj.paginator.page_range %}
+                {% if page >= page_obj.number|add:-2 and page <= page_obj.number|add:2 %}
+                    <li>
+                        <a href="?page={{page}}" class="{% if page_obj.number == page %}disabled{% endif %}">{{page}}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+            <li class="{% if not page_obj.has_next %}disabled{% endif %}">
+                <a href="{% if page_obj.has_next %}?page={{page_obj.next_page_number}}{% endif %}">Next</a>
+            </li>
+        </ul>
+        {% endif %}
+    </div>
+</section>
+
+
+{% endblock %}

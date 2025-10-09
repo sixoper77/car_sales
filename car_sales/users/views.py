@@ -3,8 +3,10 @@ from django.contrib import messages
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+from main.models import Cars
 from .forms import ProfileForm
 from .models import User
+from django.core.paginator import Paginator
 
 @login_required
 def profile(request):
@@ -23,5 +25,15 @@ def user_profile(request,username):
     user=User.objects.get(username=username)
     
     return render(request,'users/user_profile.html',{'user':user})
+
+
+@login_required
+def get_my_ads(request):
+    cars=Cars.objects.filter(owner=request.user).order_by('-id')
+    paginator=Paginator(cars,5)
+    page_number=request.GET.get('page')
+    page_obj=paginator.get_page(page_number)
+    return render(request,'users/ads.html',{'page_obj':page_obj})
+    
     
         

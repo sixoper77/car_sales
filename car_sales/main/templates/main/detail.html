@@ -31,7 +31,9 @@
             <div class="seller-label">Професійний продавець</div>
             
             <div class="seller-info">
-                <div class="seller-avatar">{{ car.owner.username|slice:":2"|upper }}</div>
+                <div class="seller-avatar">
+                    <img src="{{car.owner.image.url}}" alt="" class="seller-avatar">
+                </div>
                 <div class="seller-details">
                     <a href="{% url "users:profile_" car.owner.username %}">
                         <h4>{{ car.owner.username }}</h4>

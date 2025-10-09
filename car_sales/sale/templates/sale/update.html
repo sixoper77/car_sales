@@ -1,0 +1,543 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}Редагувати оголошення - AutoSale{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/update_car.css' %}">
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <div class="hero-text">
+            <h1>Редагування оголошення</h1>
+            <p>Оновіть інформацію про ваш автомобіль</p>
+        </div>
+
+        <!-- Form Card -->
+        <div class="search-card">
+            <form id="updateCarForm" class="filter-form" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <!-- Main Filters Row -->
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <div class="dropdown" id="categoryDropdown">
+                            <button type="button" class="dropdown-button">
+                                <span class="dropdown-text">{{ car.category.name|default:"Тип автомобіля" }}</span>
+                                <span class="material-icons">expand_more</span>
+                            </button>
+                            <div class="dropdown-content">
+                                {% for cat in form.category.field.queryset %}
+                                    <div class="dropdown-item" data-value="{{ cat.id }}">{{ cat.name }}</div>
+                                {% endfor %}
+                            </div>
+                            <input type="hidden" name="category" value="{{ car.category.id }}">
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <div class="dropdown" id="regionDropdown">
+                            <button type="button" class="dropdown-button">
+                                <span class="dropdown-text">{{ car.get_region_display|default:"Регіон" }}</span>
+                                <span class="material-icons">expand_more</span>
+                            </button>
+                            <div class="dropdown-content">
+                                {% for value, display in form.region.field.choices %}
+                                    {% if value %}
+                                        <div class="dropdown-item" data-value="{{ value }}">{{ display }}</div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <input type="hidden" name="region" value="{{ car.region }}">
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <div class="dropdown" id="brandDropdown">
+                            <button type="button" class="dropdown-button">
+                                <span class="dropdown-text">{{ car.brand.brand|default:"Марка" }}</span>
+                                <span class="material-icons">expand_more</span>
+                            </button>
+                            <div class="dropdown-content">
+                                {% for brand in form.brand.field.queryset %}
+                                    <div class="dropdown-item brand-item" data-slug="{{ brand.slug }}" data-value="{{ brand.id }}">{{ brand.brand }}</div>
+                                {% endfor %}
+                            </div>
+                            <input type="hidden" name="brand" value="{{ car.brand.id }}">
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <div class="dropdown" id="modelDropdown">
+                            <button type="button" class="dropdown-button">
+                                <span class="dropdown-text">{{ car.model.model|default:"Модель" }}</span>
+                                <span class="material-icons">expand_more</span>
+                            </button>
+                            <div class="dropdown-content" id="models">
+                                <div class="dropdown-item" data-value="">Оберіть спочатку марку</div>
+                            </div>
+                            <input type="hidden" name="model" value="{{ car.model.id }}">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Second Row -->
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <div class="dropdown" id="yearDropdown">
+                            <button type="button" class="dropdown-button">
+                                <span class="dropdown-text">{{ car.year|default:"Рік випуску" }}</span>
+                                <span class="material-icons">expand_more</span>
+                            </button>
+                            <div class="dropdown-content">
+                                {% for value in ranges %}
+                                    <div class="dropdown-item" data-value="{{ value }}">{{ value }}</div>
+                                {% endfor %}
+                            </div>
+                            <input type="hidden" name="year" value="{{ car.year }}">
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <div class="dropdown" id="colorDropdown">
+                            <button type="button" class="dropdown-button">
+                                <span class="dropdown-text">{{ car.get_color_display|default:"Колір" }}</span>
+                                <span class="material-icons">expand_more</span>
+                            </button>
+                            <div class="dropdown-content">
+                                {% for value, display in form.color.field.choices %}
+                                    {% if value %}
+                                        <div class="dropdown-item" data-value="{{ value }}">{{ display }}</div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <input type="hidden" name="color" value="{{ car.color }}">
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <div class="dropdown" id="gearboxDropdown">
+                            <button type="button" class="dropdown-button">
+                                <span class="dropdown-text">{{ car.get_gearbox_display|default:"Коробка передач" }}</span>
+                                <span class="material-icons">expand_more</span>
+                            </button>
+                            <div class="dropdown-content">
+                                {% for value, display in form.gearbox.field.choices %}
+                                    {% if value %}
+                                        <div class="dropdown-item" data-value="{{ value }}">{{ display }}</div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <input type="hidden" name="gearbox" value="{{ car.gearbox }}">
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <div class="dropdown" id="airConditionerDropdown">
+                            <button type="button" class="dropdown-button">
+                                <span class="dropdown-text">{{ car.get_air_conditioner_display|default:"Кондиціонер" }}</span>
+                                <span class="material-icons">expand_more</span>
+                            </button>
+                            <div class="dropdown-content">
+                                {% for value, display in form.air_conditioner.field.choices %}
+                                    {% if value %}
+                                        <div class="dropdown-item" data-value="{{ value }}">{{ display }}</div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <input type="hidden" name="air_conditioner" value="{{ car.air_conditioner }}">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Third Row -->
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <div class="dropdown" id="usedDropdown">
+                            <button type="button" class="dropdown-button">
+                                <span class="dropdown-text">{{ car.get_used_display|default:"Нова/БУ" }}</span>
+                                <span class="material-icons">expand_more</span>
+                            </button>
+                            <div class="dropdown-content">
+                                {% for value, display in form.used.field.choices %}
+                                    {% if value != None %}
+                                        <div class="dropdown-item" data-value="{{ value }}">{{ display }}</div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <input type="hidden" name="used" value="{{ car.used }}">
+                        </div>
+                    </div>
+
+                    <div class="filter-group price-group">
+                        <div class="price-inputs">
+                            <input type="number" name="price" placeholder="Ціна" class="price-input" value="{{ car.price }}">
+                            <span class="currency">$</span>
+                        </div>
+                    </div>
+
+                    <div class="filter-group price-group">
+                        <div class="price-inputs">
+                            <input type="number" name="discount" placeholder="Знижка %" class="price-input" value="{{ car.discount|default:'0' }}">
+                            <span class="currency">%</span>
+                        </div>
+                    </div>
+
+                    <div class="filter-group price-group">
+                        <div class="price-inputs">
+                            <input type="number" name="mileage" placeholder="Пробіг" class="price-input" step="0.01" value="{{ car.mileage }}">
+                            <span class="currency">км</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Existing Images -->
+                {% if exist_img %}
+                <div class="existing-images-section">
+                    <h3>Поточні фотографії (<span id="photosCount">{{ exist_img.count }}</span>/15):</h3>
+                    <div class="images-grid" id="existingImagesGrid">
+                        {% for img in exist_img %}
+                        <div class="image-preview-item" id="img-{{ img.id }}">
+                            <img src="{{ img.image.url }}" alt="Car photo">
+                            <button type="button" class="delete-image-btn" onclick="toggleDelete({{ img.id }})">
+                                <span class="material-icons">close</span>
+                            </button>
+                            <div class="delete-mark">
+                                <span class="material-icons">delete_forever</span>
+                            </div>
+                            <input type="hidden" name="delete_images" value="{{ img.id }}" class="delete-checkbox" disabled>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- New Images Upload -->
+                <div class="filter-row">
+                    <div class="filter-group" style="flex: 2;">
+                        <div class="file-upload">
+                            <input type="file" name="images" id="imageInput" accept="image/*" multiple onchange="previewNewImages(this)">
+                            <label for="imageInput" class="file-label">
+                                <span class="material-icons">add_photo_alternate</span>
+                                Додати фото (ще можна <span id="availableSlots">0</span>)
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="filter-group search-group">
+                        <button type="submit" class="btn-primary search-btn">
+                            <span class="material-icons">save</span>
+                            Зберегти
+                        </button>
+                    </div>
+                </div>
+
+                <!-- New Images Preview -->
+                <div id="newImagesPreview" class="images-grid" style="display: none; margin-top: 16px;"></div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'js/dropdown.js' %}"></script>
+
+<script>
+const existingCount = {{ exist_img.count|default:0 }};
+const maxImages = 15;
+let toDelete = [];
+let accumulatedFiles = [];
+
+function toggleDelete(id) {
+    const item = document.getElementById(`img-${id}`);
+    const hiddenInput = item.querySelector('.delete-checkbox');
+    
+    if (toDelete.includes(id)) {
+        toDelete = toDelete.filter(x => x !== id);
+        item.classList.remove('marked-delete');
+        hiddenInput.disabled = true;
+    } else {
+        toDelete.push(id);
+        item.classList.add('marked-delete');
+        hiddenInput.disabled = false;
+    }
+    
+    updateCounter();
+}
+
+function updateCounter() {
+    const willRemain = existingCount - toDelete.length;
+    const available = maxImages - willRemain - accumulatedFiles.length;
+    
+    document.getElementById('availableSlots').textContent = Math.max(0, available);
+    document.getElementById('photosCount').textContent = willRemain;
+}
+
+function previewNewImages(input) {
+    const preview = document.getElementById('newImagesPreview');
+    const willRemain = existingCount - toDelete.length;
+    const available = maxImages - willRemain - accumulatedFiles.length;
+    
+    if (input.files && input.files.length > 0) {
+        const newFiles = Array.from(input.files);
+        
+        if (accumulatedFiles.length + newFiles.length > available) {
+            const canAdd = available - accumulatedFiles.length;
+            alert(`Можна додати ще тільки ${canAdd} фото!`);
+            accumulatedFiles.push(...newFiles.slice(0, canAdd));
+        } else {
+            accumulatedFiles.push(...newFiles);
+        }
+    }
+    
+    const dt = new DataTransfer();
+    accumulatedFiles.forEach(file => dt.items.add(file));
+    input.files = dt.files;
+    
+    preview.innerHTML = '';
+    
+    if (accumulatedFiles.length > 0) {
+        preview.style.display = 'grid';
+        
+        accumulatedFiles.forEach((file, index) => {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                const div = document.createElement('div');
+                div.className = 'image-preview-item';
+                div.innerHTML = `
+                    <img src="${e.target.result}" alt="Нове фото ${index + 1}">
+                    <div class="new-image-badge">НОВЕ</div>
+                    <button type="button" class="remove-new-image" onclick="removeNewImage(${index})">
+                        <span class="material-icons">close</span>
+                    </button>
+                `;
+                preview.appendChild(div);
+            };
+            
+            reader.readAsDataURL(file);
+        });
+    } else {
+        preview.style.display = 'none';
+    }
+    
+    updateCounter();
+}
+
+function removeNewImage(index) {
+    accumulatedFiles.splice(index, 1);
+    
+    const input = document.getElementById('imageInput');
+    const dt = new DataTransfer();
+    accumulatedFiles.forEach(file => dt.items.add(file));
+    input.files = dt.files;
+    
+    previewNewImages(input);
+}
+
+function loadModels(brandSlug, selectedModelId = null) {
+    const modelsDiv = document.getElementById('models');
+    modelsDiv.innerHTML = '<div class="dropdown-item">Загрузка...</div>';
+    
+    $.ajax({
+        url: `/get-models/${brandSlug}/`,
+        type: 'GET',
+        success: function(data) {
+            modelsDiv.innerHTML = '';
+
+            if (data && data.length > 0) {
+                data.forEach(model => {
+                    const div = document.createElement('div');
+                    div.className = 'dropdown-item';
+                    div.setAttribute('data-value', model.id);
+                    div.textContent = model.models;
+                    modelsDiv.appendChild(div);
+                    
+                    if (selectedModelId && model.id == selectedModelId) {
+                        const modelBtn = document.querySelector('#modelDropdown .dropdown-text');
+                        if (modelBtn) {
+                            modelBtn.textContent = model.models;
+                        }
+                    }
+                });
+
+                // ВАЖНО: Переинициализируем обработчики для новых элементов модели
+                initModelDropdownHandlers();
+            } else {
+                modelsDiv.innerHTML = '<div class="dropdown-item" data-value="">Моделі не знайдено</div>';
+            }
+        },
+        error: function() {
+            modelsDiv.innerHTML = '<div class="dropdown-item" data-value="">Помилка завантаження</div>';
+        }
+    });
+}
+
+// Отдельная функция для инициализации обработчиков модели
+function initModelDropdownHandlers() {
+    const modelItems = document.querySelectorAll('#modelDropdown .dropdown-item');
+    const modelButton = document.querySelector('#modelDropdown .dropdown-button');
+    const modelDropdown = document.getElementById('modelDropdown');
+    
+    // Обработчик клика по кнопке
+    if (modelButton) {
+        // Удаляем старые обработчики
+        const newButton = modelButton.cloneNode(true);
+        modelButton.parentNode.replaceChild(newButton, modelButton);
+        
+        newButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            modelDropdown.classList.toggle('active');
+        });
+    }
+    
+    // Обработчики для элементов
+    modelItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const value = this.getAttribute('data-value');
+            const text = this.textContent;
+            
+            document.querySelector('#modelDropdown .dropdown-text').textContent = text;
+            document.querySelector('input[name="model"]').value = value;
+            modelDropdown.classList.remove('active');
+        });
+    });
+}
+
+// Универсальная функция инициализации dropdown
+function initDropdownHandlers(selector) {
+    const dropdown = document.querySelector(selector);
+    if (!dropdown) return;
+    
+    const button = dropdown.querySelector('.dropdown-button');
+    const items = dropdown.querySelectorAll('.dropdown-item');
+    const hiddenInput = dropdown.querySelector('input[type="hidden"]');
+    
+    if (button) {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            dropdown.classList.toggle('active');
+        });
+    }
+    
+    items.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const value = this.getAttribute('data-value');
+            const text = this.textContent;
+            
+            dropdown.querySelector('.dropdown-text').textContent = text;
+            if (hiddenInput) {
+                hiddenInput.value = value;
+            }
+            dropdown.classList.remove('active');
+        });
+    });
+}
+
+// Обработчик изменения бренда
+function initBrandChangeHandler() {
+    const brandItems = document.querySelectorAll('#brandDropdown .dropdown-item');
+    brandItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const brandSlug = this.getAttribute('data-slug');
+            const brandId = this.getAttribute('data-value');
+            const brandText = this.textContent;
+            
+            // Обновляем скрытое поле и текст
+            document.querySelector('input[name="brand"]').value = brandId;
+            document.querySelector('#brandDropdown .dropdown-text').textContent = brandText;
+            document.getElementById('brandDropdown').classList.remove('active');
+            
+            // Сбрасываем модель
+            document.querySelector('input[name="model"]').value = '';
+            document.querySelector('#modelDropdown .dropdown-text').textContent = 'Модель';
+            
+            // Загружаем новые модели
+            if (brandSlug) {
+                loadModels(brandSlug);
+            }
+        });
+    });
+}
+
+// Закрытие dropdown при клике вне элемента
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.dropdown')) {
+        document.querySelectorAll('.dropdown.active').forEach(dropdown => {
+            dropdown.classList.remove('active');
+        });
+    }
+});
+
+// Инициализация при загрузке страницы
+document.addEventListener('DOMContentLoaded', function() {
+    updateCounter();
+    
+    // Инициализация ВСЕХ дропдаунов
+    initDropdownHandlers('#categoryDropdown');
+    initDropdownHandlers('#regionDropdown');
+    initDropdownHandlers('#yearDropdown');
+    initDropdownHandlers('#colorDropdown');
+    initDropdownHandlers('#gearboxDropdown');
+    initDropdownHandlers('#airConditionerDropdown');
+    initDropdownHandlers('#usedDropdown');
+    
+    // Специальная инициализация для бренда
+    const brandDropdown = document.getElementById('brandDropdown');
+    const brandButton = brandDropdown.querySelector('.dropdown-button');
+    
+    brandButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        brandDropdown.classList.toggle('active');
+    });
+    
+    initBrandChangeHandler();
+    
+    // Загрузка моделей для текущего бренда
+    const brandId = {{ car.brand.id|default:"null" }};
+    if (brandId) {
+        const brandSlug = '{{ car.brand.slug|default:"" }}';
+        const modelId = {{ car.model.id|default:"null" }};
+        if (brandSlug) {
+            // Загружаем модели после инициализации
+            setTimeout(() => {
+                loadModels(brandSlug, modelId);
+            }, 100);
+        }
+    }
+});
+
+// Валидация формы перед отправкой
+document.getElementById('updateCarForm').addEventListener('submit', function(e) {
+    const willRemain = existingCount - toDelete.length;
+    const total = willRemain + accumulatedFiles.length;
+    
+    if (total === 0) {
+        e.preventDefault();
+        alert('Має бути хоча б одне фото!');
+        return false;
+    }
+    
+    if (total > maxImages) {
+        e.preventDefault();
+        alert(`Максимум ${maxImages} фото! Зараз обрано ${total}.`);
+        return false;
+    }
+    
+    // Проверяем, что все необходимые поля заполнены
+    const requiredFields = ['category', 'region', 'brand', 'model', 'year', 'price'];
+    for (let field of requiredFields) {
+        const input = document.querySelector(`input[name="${field}"]`);
+        if (!input || !input.value) {
+            e.preventDefault();
+            alert(`Заповніть поле: ${field}`);
+            return false;
+        }
+    }
+});
+</script>
+{% endblock %}

@@ -1992,7 +1992,7 @@ body {
     width: 40px;
     height: 40px;
     background: var(--md-primary);
-    border-radius: 4px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -3287,4 +3287,384 @@ input[type="text"]:-moz-autofill {
     scrollbar-width: thin;
     scrollbar-color: #3d3d3d #0f0f0f;
     max-height: calc(100vh - 64px - 76px - 88px);
+}
+
+
+
+.edit-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: var(--md-primary-container);
+    border-radius: 50%;
+    color: var(--md-primary);
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.edit-icon:hover {
+    background: var(--md-primary);
+    color: var(--md-on-primary);
+    transform: scale(1.1);
+    box-shadow: var(--md-elevation-2);
+}
+
+.edit-icon .material-icons {
+    font-size: 20px;
+}
+
+.no-results-icon {
+    font-size: 80px;
+    color: var(--md-on-surface-variant);
+    opacity: 0.5;
+    margin-bottom: 20px;
+}
+
+.no-results-content h3 {
+    font-size: 24px;
+    color: var(--md-on-surface);
+    margin-bottom: 12px;
+}
+
+.no-results-content p {
+    color: var(--md-on-surface-variant);
+    font-size: 16px;
+    margin-bottom: 24px;
+}
+
+
+
+
+.existing-images-section {
+    margin: 24px 0;
+}
+
+.existing-images-section h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--md-on-surface);
+    margin-bottom: 16px;
+}
+
+.images-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+}
+
+.image-preview-item {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid var(--md-outline-variant);
+    transition: all 0.3s ease;
+    aspect-ratio: 1;
+}
+
+.image-preview-item.marked-delete {
+    border-color: var(--md-error);
+    opacity: 0.5;
+}
+
+.image-preview-item.marked-delete .delete-mark {
+    opacity: 1;
+    visibility: visible;
+}
+
+.image-preview-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.delete-image-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(186, 26, 26, 0.9);
+    color: white;
+    border: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 2;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.delete-image-btn:hover {
+    background: #ba1a1a;
+    transform: scale(1.1);
+}
+
+.delete-image-btn .material-icons {
+    font-size: 18px;
+}
+
+.delete-mark {
+    position: absolute;
+    inset: 0;
+    background: rgba(186, 26, 26, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.delete-mark .material-icons {
+    font-size: 48px;
+    color: white;
+}
+
+.file-upload {
+    width: 100%;
+}
+
+.file-upload input[type="file"] {
+    display: none;
+}
+
+.file-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 16px;
+    background: var(--md-surface);
+    border: 2px dashed var(--md-outline-variant);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: var(--md-on-surface);
+    font-weight: 500;
+}
+
+.file-label:hover {
+    border-color: var(--md-primary);
+    background: var(--md-primary-container);
+    color: var(--md-primary);
+}
+
+.file-label .material-icons {
+    font-size: 24px;
+}
+
+#availableSlots {
+    font-weight: 700;
+    color: var(--md-primary);
+}
+
+.new-image-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: var(--md-success);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+    .images-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 8px;
+    }
+    
+    .existing-images-section h3 {
+        font-size: 16px;
+    }
+}
+
+
+
+
+
+
+
+.existing-images-section {
+    margin: 24px 0;
+    padding: 20px;
+    background: var(--md-surface-variant);
+    border-radius: 12px;
+}
+
+.existing-images-section h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--md-on-surface);
+    margin-bottom: 16px;
+}
+
+.images-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+}
+
+.image-preview-item {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid var(--md-outline-variant);
+    transition: all 0.3s ease;
+    aspect-ratio: 1;
+    background: var(--md-surface);
+}
+
+.image-preview-item.marked-delete {
+    border-color: var(--md-error);
+    opacity: 0.5;
+}
+
+.image-preview-item.marked-delete .delete-mark {
+    opacity: 1;
+    visibility: visible;
+}
+
+.image-preview-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.delete-image-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(186, 26, 26, 0.9);
+    color: white;
+    border: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 2;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.delete-image-btn:hover {
+    background: #ba1a1a;
+    transform: scale(1.1);
+}
+
+.delete-image-btn .material-icons {
+    font-size: 18px;
+}
+
+.delete-mark {
+    position: absolute;
+    inset: 0;
+    background: rgba(186, 26, 26, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.delete-mark .material-icons {
+    font-size: 48px;
+    color: white;
+}
+
+.file-upload {
+    width: 100%;
+}
+
+.file-upload input[type="file"] {
+    display: none;
+}
+
+.file-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 16px;
+    background: var(--md-surface);
+    border: 2px dashed var(--md-outline-variant);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: var(--md-on-surface);
+    font-weight: 500;
+}
+
+.file-label:hover {
+    border-color: var(--md-primary);
+    background: var(--md-primary-container);
+    color: var(--md-primary);
+}
+
+.file-label .material-icons {
+    font-size: 24px;
+}
+
+#availableSlots {
+    font-weight: 700;
+    color: var(--md-primary);
+}
+
+.new-image-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: var(--md-success);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+#newImagesPreview {
+    margin-top: 16px;
+    padding: 16px;
+    background: var(--md-primary-container);
+    border-radius: 12px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .images-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 8px;
+    }
+    
+    .existing-images-section {
+        padding: 16px;
+    }
+    
+    .existing-images-section h3 {
+        font-size: 16px;
+    }
+    
+    .delete-mark .material-icons {
+        font-size: 36px;
+    }
+}
+
+@media (max-width: 480px) {
+    .images-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
