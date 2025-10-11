@@ -118,6 +118,7 @@
         </div>
 
         <!-- Car Details Section -->
+        
         <div class="car-details-section">
             <h2 class="details-title">{{ car.brand }} {{ car.model }} {{ car.year }}</h2>
             <div class="details-subtitle">•{{ car.category}}</div>
@@ -132,6 +133,7 @@
             <div class="verification-info">
                 <div>Перевірено AUTO.RIA на реєстрацію МВС</div>
                 <div class="update-date">{% if car.updated %}{{car.updated}}{% else %}{{car.created}}{% endif %}</div>
+      
 
                 <div class="vin-info">
                     <div class="vin-item">

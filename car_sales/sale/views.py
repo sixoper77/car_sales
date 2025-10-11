@@ -49,7 +49,7 @@ def get_models(request,slug):
         return JsonResponse([], safe=False)
     
 def update_ad(request,ad):
-    car=Cars.objects.get(id=ad,owner=request.user)
+    car=Cars.objects.select_related('owner').prefetch_related('images').get(id=ad,owner=request.user)
     print(request.POST)
     if request.method=='POST':
         form=AddCarform(request.POST,instance=car)
@@ -63,7 +63,7 @@ def update_ad(request,ad):
             if delete_images:
                 CarImage.objects.filter(id__in=delete_images,car=car).delete()
             if new_images:
-                exist_count=15-car.images.count()
+                exist_count=15-len(car.images)
                 if exist_count>0:
                     new_images=new_images[:exist_count]
                 for idx,img in enumerate(new_images):

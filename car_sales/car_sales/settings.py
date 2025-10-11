@@ -34,6 +34,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'channels',
     'daphne',
+    # 'debug_toolbar',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -68,6 +69,13 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
     
     'users.middleware.UpdateUserLastActivityMiddelware',
+    
+    'django.middleware.common.CommonMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
+]
+
+INTERNAL_IPS = [
+    '127.0.0.1',
 ]
 
 ROOT_URLCONF = 'car_sales.urls'

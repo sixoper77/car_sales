@@ -8,6 +8,7 @@ from django.utils import timezone
 from django.db.models import Q
 from django.core.cache import cache
 
+
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
@@ -15,10 +16,14 @@ def get_client_ip(request):
     else:
         ip = request.META.get('REMOTE_ADDR')
     return ip
+
     
 
 def main_view(request):
-    cars=Cars.objects.all().order_by('-id')
+    cars=cache.get('car_list')
+    if not cars:
+        cars=list(Cars.objects.all().order_by('-id'))
+        cache.set('car_list',cars,60*2)
     paginator=Paginator(cars,5)
     page_number=request.GET.get('page')
     page_obj=paginator.get_page(page_number)
