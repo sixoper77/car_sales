@@ -53,9 +53,17 @@
                                 <span class="material-icons">location_on</span>
                                 {{car.region}}
                             </div>
-                            <a href="{% url "sale:update-ad" car.id %}" class="edit-icon" title="Редагувати">
-                                <span class="material-icons">edit</span>
-                            </a>
+                            <div class="car-actions">
+                                <a href="{% url "sale:update-ad" car.id %}" class="edit-icon" title="Редагувати">
+                                    <span class="material-icons">edit</span>
+                                </a>
+                                <form method="POST" action="{% url 'users:delete' car.id %}" style="margin: 0;" onsubmit="return confirm('Ви впевнені, що хочете видалити це оголошення?');">
+                                    {% csrf_token %}
+                                    <button type="submit" class="delete-icon" title="Видалити">
+                                        <span class="material-icons">delete</span>
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>

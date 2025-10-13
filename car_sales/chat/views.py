@@ -26,13 +26,12 @@ def chats_view(request, user=None):
             (Q(recipient=request.user) & Q(sender=usr))
         ).order_by('-timestamp').first()
         
-        if last_message:  # Додаємо тільки якщо є повідомлення
+        if last_message:  
             user_last_messages.append({
                 'user': usr,
                 'last_message': last_message
             })
-    
-    # Сортування: спочатку ті, у кого є повідомлення
+   
     user_last_messages.sort(
         key=lambda x: x['last_message'].timestamp,
         reverse=True

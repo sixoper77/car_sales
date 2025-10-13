@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render,get_object_or_404
 from django.contrib import messages
 from django.urls import reverse
 from django.http import HttpResponseRedirect
@@ -35,5 +35,11 @@ def get_my_ads(request):
     page_obj=paginator.get_page(page_number)
     return render(request,'users/ads.html',{'page_obj':page_obj})
     
-    
-        
+
+@login_required
+def delete_ad(request,id):
+    car=get_object_or_404(Cars,id=id)
+    car_id=car.id
+    car.delete()
+    messages.success(request,f'Оголошення номер {car_id} видалено!')
+    return redirect('users:ads')

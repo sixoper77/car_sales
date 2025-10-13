@@ -1,4 +1,5 @@
 {% extends "main/base.html" %}
+{% load cache %}
 {% load static %}
 {% load currency %}
 {% load humanize %}
@@ -77,6 +78,7 @@
     </div>
 
     <!-- Right Panel - Images and Details -->
+    {% cache 180 car_detail car.id %}
     <div class="car-images-panel">
         <!-- Main Image -->
         <div class="main-image-container">
@@ -150,6 +152,7 @@
             </div>
         </div>
     </div>
+    {% endcache %}
 </div>
 <script>
     

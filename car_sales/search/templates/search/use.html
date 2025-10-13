@@ -1,4 +1,5 @@
 {% extends "main/base.html" %}
+{% load cache %}
 {% load static %}
 {% load humanize %}
 {% block title %}Результати пошуку - AutoSale{% endblock %}
@@ -30,6 +31,7 @@
     <div class="container">
         <div class="cars-grid">
             {% for car in page_obj %}
+            {% cache 240 car_use car.id %}
                 <div class="car-card">
                     <div class="car-image">
                         <div class="placeholder-image">
@@ -49,6 +51,7 @@
                         </div>
                     </div>
                 </div>
+            {% endcache %}
             {% empty %}
                 <div class="no-results">
                     <div class="no-results-content">
@@ -75,4 +78,6 @@
                 <a href="{% if page_obj.has_next %}?page={{page_obj.next_page_number}}{% endif %}">Next</a>
             </li>
         </ul>
+    </div>
+</section>
 {% endblock %}

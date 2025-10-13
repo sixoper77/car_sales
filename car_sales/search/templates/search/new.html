@@ -1,5 +1,6 @@
 {% extends "main/base.html" %}
 {% load static %}
+{% load cache %}
 {% load humanize %}
 {% block title %}Результати пошуку - AutoSale{% endblock %}
 
@@ -30,6 +31,7 @@
     <div class="container">
         <div class="cars-grid">
             {% for car in page_obj %}
+                {% cache 180 car_new car.id %}
                 <div class="car-card">
                     <div class="car-image">
                         <div class="placeholder-image">
@@ -49,6 +51,7 @@
                         </div>
                     </div>
                 </div>
+                {% endcache %}
             {% empty %}
                 <div class="no-results">
                     <div class="no-results-content">

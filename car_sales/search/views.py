@@ -3,7 +3,7 @@ from django.core.paginator import Paginator
 from main.models import Cars
 from decimal import Decimal
 from django.db.models import Q
-
+from django.core.cache import cache
 
 def search(request):
     print(request.GET)

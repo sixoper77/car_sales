@@ -19,7 +19,6 @@ def add_car(request):
             car.slug=slugify(f'{car.brand}-{car.model}-{car.id}')
             car.save(update_fields=['slug'])
             images=request.FILES.getlist('images')
-            # print(request.FILES)
             print(images)
             if len(images)>15:
                 images=images[:15]
@@ -58,12 +57,14 @@ def update_ad(request,ad):
             car.owner=request.user
             car.save()
             car.slug=slugify(f'{car.brand}-{car.model}-{car.id}')
+            car.save() 
             new_images=request.FILES.getlist('images')
+            print(new_images)
             delete_images=request.POST.getlist('delete_images')
             if delete_images:
                 CarImage.objects.filter(id__in=delete_images,car=car).delete()
             if new_images:
-                exist_count=15-len(car.images)
+                exist_count=15-car.images.count()
                 if exist_count>0:
                     new_images=new_images[:exist_count]
                 for idx,img in enumerate(new_images):
@@ -75,6 +76,8 @@ def update_ad(request,ad):
             
             messages.success(request,'Оголошення успішно оновленно')
             return redirect('users:ads')
+        
+        print(form.errors)
     else:
         form=AddCarform(instance=car)
     exist_img=car.images.all()
