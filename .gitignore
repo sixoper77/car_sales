@@ -21,3 +21,4 @@ fixtures/
 products/
 dump.py
 cars.session.sql
+users_image

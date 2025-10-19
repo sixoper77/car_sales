@@ -34,7 +34,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'channels',
     'daphne',
-    # 'debug_toolbar',
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -71,12 +71,9 @@ MIDDLEWARE = [
     'users.middleware.UpdateUserLastActivityMiddelware',
     
     'django.middleware.common.CommonMiddleware',
-    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
+
 ]
 
-INTERNAL_IPS = [
-    '127.0.0.1',
-]
 
 ROOT_URLCONF = 'car_sales.urls'
 
@@ -101,7 +98,23 @@ ASGI_APPLICATION='car_sales.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
+SOCIAL_ACCOUNT_ADAPTER='users.adapter.MySocialAccountAdapter'
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
+        'APP': {
+            'client_id': os.getenv('GOOGLE_CLIENT_ID'),
+            'secret': os.getenv('GOOGLE_SECRET'),
+            'key': ''
+        }
+    }
+}
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -179,3 +192,4 @@ LOGOUT_REDIRECT_URL = "/"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = "optional"
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+SOCIALACCOUNT_LOGIN_ON_GET=True
