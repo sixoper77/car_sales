@@ -3719,3 +3719,559 @@ input[type="text"]:-moz-autofill {
     gap: 8px;
     align-items: center;
 }
+
+
+/* Likes Button Styles */
+.favorite-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: rgba(0, 0, 0, 0.7);
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 50%;
+    color: rgba(255, 255, 255, 0.8);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+}
+
+.favorite-btn:hover {
+    background: rgba(0, 0, 0, 0.85);
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.favorite-btn .material-icons {
+    font-size: 24px;
+    transition: all 0.3s ease;
+}
+
+/* Liked state */
+.favorite-btn.liked {
+    background: rgba(0, 0, 0, 0.8);
+    color: #ff4444;
+}
+
+.favorite-btn.liked:hover {
+    background: rgba(0, 0, 0, 0.9);
+}
+
+.favorite-btn.liked .material-icons {
+    color: #ff4444;
+}
+
+/* Animation on hover */
+.favorite-btn:active {
+    transform: scale(0.95);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .favorite-btn {
+        width: 40px;
+        height: 40px;
+        padding: 8px;
+        top: 12px;
+        right: 12px;
+    }
+    
+    .favorite-btn .material-icons {
+        font-size: 20px;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+/* ============================================
+   FAVORITES PAGE STYLES
+   ============================================ */
+
+/* Favorites Header Section */
+.favorites-header {
+    background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
+    padding: 48px 0;
+    color: white;
+}
+
+.favorites-header-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+}
+
+.favorites-title {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.favorites-title .material-icons {
+    font-size: 48px;
+    color: white;
+}
+
+.favorites-title h1 {
+    font-size: 42px;
+    font-weight: 700;
+    margin: 0;
+    color: white;
+}
+
+.favorites-count {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 400;
+}
+
+.favorites-count span {
+    font-weight: 700;
+    font-size: 24px;
+}
+
+/* ============================================
+   FAVORITES CONTENT SECTION
+   ============================================ */
+
+.favorites-section {
+    padding: 64px 0;
+    background: var(--md-surface);
+    min-height: calc(100vh - 64px - 160px);
+}
+
+/* Car Card Modifications for Favorites */
+.favorites-section .car-card {
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.favorites-section .car-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--md-elevation-3);
+}
+
+/* ============================================
+   FAVORITE BADGE
+   ============================================ */
+
+.favorite-badge {
+    background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
+    color: white;
+    font-weight: 600;
+    padding: 6px 12px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* ============================================
+   REMOVE FAVORITE BUTTON
+   ============================================ */
+
+.remove-favorite-form {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 10;
+    margin: 0;
+    padding: 0;
+}
+
+.remove-favorite-btn {
+    background: rgba(0, 0, 0, 0.7);
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+}
+
+.car-card:hover .remove-favorite-btn {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.remove-favorite-btn:hover {
+    background: rgba(255, 68, 68, 0.9);
+    transform: scale(1.1);
+}
+
+.remove-favorite-btn .material-icons {
+    color: white;
+    font-size: 20px;
+}
+
+/* ============================================
+   CAR DETAILS ENHANCEMENT
+   ============================================ */
+
+.favorites-section .car-details {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--md-on-surface-variant);
+}
+
+.detail-item .material-icons {
+    font-size: 16px;
+    color: var(--md-on-surface-variant);
+}
+
+/* ============================================
+   EMPTY FAVORITES STATE
+   ============================================ */
+
+.empty-favorites {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+    padding: 40px 20px;
+}
+
+.empty-favorites-content {
+    text-align: center;
+    max-width: 500px;
+    animation: fadeInUp 0.6s ease;
+}
+
+.empty-icon {
+    font-size: 120px;
+    color: rgba(255, 68, 68, 0.3);
+    margin-bottom: 24px;
+    display: block;
+}
+
+.empty-favorites-content h2 {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--md-on-surface);
+    margin-bottom: 16px;
+}
+
+.empty-favorites-content p {
+    font-size: 16px;
+    color: var(--md-on-surface-variant);
+    line-height: 1.6;
+    margin-bottom: 32px;
+}
+
+.empty-favorites-content .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 28px;
+    font-size: 16px;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Card Removal Animation */
+.car-card {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* ============================================
+   HOVER EFFECTS
+   ============================================ */
+
+.favorites-section .car-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 16px;
+    border: 2px solid transparent;
+    transition: border-color 0.3s ease;
+    pointer-events: none;
+}
+
+.favorites-section .car-card:hover::before {
+    border-color: rgba(255, 68, 68, 0.3);
+}
+
+/* ============================================
+   SUCCESS/ERROR MESSAGES
+   ============================================ */
+
+.favorites-message {
+    position: fixed;
+    top: 84px;
+    right: 24px;
+    background: var(--md-surface);
+    padding: 16px 24px;
+    border-radius: 12px;
+    box-shadow: var(--md-elevation-3);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 1000;
+    animation: slideInRight 0.3s ease;
+}
+
+.favorites-message.success {
+    border-left: 4px solid var(--md-success);
+}
+
+.favorites-message.error {
+    border-left: 4px solid var(--md-error);
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* ============================================
+   LOADING STATE
+   ============================================ */
+
+.car-card.removing {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN - TABLET
+   ============================================ */
+
+@media (max-width: 768px) {
+    .favorites-header {
+        padding: 32px 0;
+    }
+
+    .favorites-title {
+        gap: 12px;
+    }
+
+    .favorites-title .material-icons {
+        font-size: 36px;
+    }
+
+    .favorites-title h1 {
+        font-size: 32px;
+    }
+
+    .favorites-count {
+        font-size: 16px;
+    }
+
+    .favorites-count span {
+        font-size: 20px;
+    }
+
+    .favorites-section {
+        padding: 48px 0;
+    }
+
+    .remove-favorite-btn {
+        opacity: 1;
+    }
+
+    .empty-favorites {
+        min-height: 50vh;
+    }
+
+    .empty-icon {
+        font-size: 80px;
+    }
+
+    .empty-favorites-content h2 {
+        font-size: 26px;
+    }
+
+    .empty-favorites-content p {
+        font-size: 15px;
+    }
+}
+
+/* ============================================
+   RESPONSIVE DESIGN - MOBILE
+   ============================================ */
+
+@media (max-width: 480px) {
+    .favorites-title {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .favorites-title h1 {
+        font-size: 28px;
+    }
+
+    .favorites-title .material-icons {
+        font-size: 32px;
+    }
+
+    .favorites-section {
+        padding: 32px 0;
+    }
+
+    .empty-icon {
+        font-size: 64px;
+    }
+
+    .empty-favorites-content h2 {
+        font-size: 22px;
+    }
+
+    .empty-favorites-content p {
+        font-size: 14px;
+    }
+
+    .empty-favorites-content .btn-primary {
+        padding: 12px 24px;
+        font-size: 14px;
+    }
+
+    .remove-favorite-form {
+        top: 8px;
+        right: 8px;
+    }
+
+    .remove-favorite-btn {
+        width: 32px;
+        height: 32px;
+    }
+
+    .remove-favorite-btn .material-icons {
+        font-size: 18px;
+    }
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+    .favorites-header {
+        background: none !important;
+        color: black !important;
+        border-bottom: 2px solid #ddd;
+    }
+
+    .favorites-title .material-icons {
+        color: black !important;
+    }
+
+    .favorites-title h1 {
+        color: black !important;
+    }
+
+    .remove-favorite-btn,
+    .remove-favorite-form,
+    .pagination {
+        display: none !important;
+    }
+
+    .car-card {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    .favorites-section .car-card:hover {
+        transform: none;
+        box-shadow: none;
+    }
+
+    .favorite-badge {
+        background: #ddd !important;
+        color: black !important;
+    }
+}
+
+
+.favorites-header {
+    background: #000; /* просто черный */
+    padding: 48px 0;
+    color: #8b7cf8;
+}
+
+.favorites-header-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+}
+
+.favorites-title {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.favorites-title .material-icons {
+    font-size: 48px;
+    color: #ff4444; /* красный лайк */
+}
+
+.favorites-title h1 {
+    font-size: 42px;
+    font-weight: 700;
+    margin: 0;
+    color: #8b7cf8; /* фиолетовый текст */
+}
+
+.favorites-count {
+    font-size: 18px;
+    color: #8b7cf8;
+    font-weight: 400;
+}
+
+.favorites-count span {
+    font-weight: 700;
+    font-size: 24px;
+    color: #8b7cf8;
+}

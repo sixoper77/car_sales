@@ -1,12 +1,13 @@
 import datetime
 from .models import CarBrand,CarModel,Cars,CarViews
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.http import JsonResponse
 from .constants import TYPES,REGIONS,COLORS
 from django.core.paginator import Paginator
 from django.utils import timezone
 from django.db.models import Q
 from django.core.cache import cache
+from django.shortcuts import get_object_or_404
 
 
 def get_client_ip(request):
@@ -60,3 +61,10 @@ def model_detail(request,slug):
         )
     return render(request,'main/detail.html',{'car':car})
     
+def likes(request,slug):
+    ad=get_object_or_404(Cars,slug=slug)
+    if request.user in ad.likes.all():
+        ad.likes.remove(request.user)
+    else:
+        ad.likes.add(request.user)
+    return redirect('main:detail',slug=ad.slug)

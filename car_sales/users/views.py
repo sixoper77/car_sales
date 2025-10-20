@@ -43,3 +43,18 @@ def delete_ad(request,id):
     car.delete()
     messages.success(request,f'Оголошення номер {car_id} видалено!')
     return redirect('users:ads')
+
+@login_required
+def get_my_choise(request):
+    cars=Cars.objects.filter(likes=request.user)
+    paginator=Paginator(cars,5)
+    page_number=request.GET.get('page')
+    page_obj=paginator.get_page(page_number)
+    return render(request,'users/my_choise.html',{'page_obj':page_obj})
+
+def delete_like(request,slug):
+    car=get_object_or_404(Cars,slug=slug)
+    car.likes.remove(request.user)
+    return redirect('users:my_choise')
+    
+    

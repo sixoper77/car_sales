@@ -56,6 +56,7 @@ class Cars(models.Model):
     air_conditioner=models.CharField(choices=CONDITIONERS,verbose_name='Кондиционеры',null=True,blank=True)
     gearbox=models.CharField(choices=GEARBOX,verbose_name='Коробки передач',null=True,blank=True)
     slug = models.SlugField(max_length=255)
+    likes=models.ManyToManyField(settings.AUTH_USER_MODEL,related_name='likes',blank=True)
     brand = models.ForeignKey(CarBrand, related_name="cars", on_delete=models.CASCADE)
     model = models.ForeignKey(CarModel, related_name="cars", on_delete=models.CASCADE)
     region = models.CharField(max_length=255, choices=REGIONS, verbose_name="Область")
@@ -82,7 +83,8 @@ class Cars(models.Model):
         if self.discount:
             return round(self.price-self.price*self.discount/100,2)
         return self.price
-    
+    def total_likes(self):
+        return self.likes.count()
 class CarViews(models.Model):
     car=models.ForeignKey(Cars,related_name="views",on_delete=models.CASCADE)
     ip_address=models.GenericIPAddressField(null=True,blank=True)

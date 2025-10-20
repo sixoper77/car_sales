@@ -1,0 +1,105 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% load humanize %}
+{% block title %}Обрані автомобілі - AutoSale{% endblock %}
+
+{% block content %}
+<!-- Favorites Header Section -->
+<section class="favorites-header">
+    <div class="container">
+        <div class="favorites-header-content">
+            <div class="favorites-title">
+                <span class="material-icons">favorite</span>
+                <h1>Обрані автомобілі</h1>
+            </div>
+            <p class="favorites-count">Всього обраних: <span>{{ page_obj.paginator.count }}</span></p>
+        </div>
+    </div>
+</section>
+
+<!-- Favorites Section -->
+<section class="favorites-section">
+    <div class="container">
+        {% if page_obj %}
+            <div class="cars-grid">
+                {% for car in page_obj %}
+                    <div class="car-card">
+                        <div class="car-image">
+                            <div class="placeholder-image">
+                                {% if car.image %}
+                                    <img src="{{ car.image.url }}" alt="{{ car.brand }} {{ car.model }}" class="card-image">
+                                {% elif car.images.first %}
+                                    <img src="{{ car.images.first.image.url }}" alt="{{ car.brand }} {{ car.model }}" class="card-image">
+                                {% else %}
+                                    <span class="material-icons">directions_car</span>
+                                {% endif %}
+                            </div>
+                            <div class="car-badge favorite-badge">♥ Обране</div>
+                            
+                            <!-- Remove from favorites button -->
+                            <form method="post" action="{% url 'users:del_like' car.slug %}" class="remove-favorite-form">
+                                {% csrf_token %}
+                                <button type="submit" class="remove-favorite-btn" title="Видалити з обраних">
+                                    <span class="material-icons">close</span>
+                                </button>
+                            </form>
+                        </div>
+                        <div class="car-info">
+                            <a href="{{ car.get_absolute_url }}">
+                                <h3>{{ car.brand }} {{ car.model }} {{ car.year }}</h3>
+                            </a>
+                            <p class="car-details">
+                                <span class="detail-item">
+                                    <span class="material-icons">palette</span>
+                                    {{ car.color }}
+                                </span>
+                                <span class="detail-item">
+                                    <span class="material-icons">person</span>
+                                    {{ car.owner }}
+                                </span>
+                            </p>
+                            <p class="car-price">${{ car.price|intcomma }}</p>
+                            <div class="car-location">
+                                <span class="material-icons">location_on</span>
+                                {{ car.region }}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if page_obj.paginator.num_pages > 1 %}
+                <ul class="pagination">
+                    <li class="{% if not page_obj.has_previous %}disabled{% endif %}">
+                        <a href="{% if page_obj.has_previous %}?page={{ page_obj.previous_page_number }}{% endif %}">Previous</a>
+                    </li>
+                    {% for page in page_obj.paginator.page_range %}
+                        {% if page >= page_obj.number|add:-2 and page <= page_obj.number|add:2 %}
+                            <li>
+                                <a href="?page={{ page }}" class="{% if page_obj.number == page %}disabled{% endif %}">{{ page }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    <li class="{% if not page_obj.has_next %}disabled{% endif %}">
+                        <a href="{% if page_obj.has_next %}?page={{ page_obj.next_page_number }}{% endif %}">Next</a>
+                    </li>
+                </ul>
+            {% endif %}
+        {% else %}
+            <!-- Empty State -->
+            <div class="empty-favorites">
+                <div class="empty-favorites-content">
+                    <span class="material-icons empty-icon">favorite_border</span>
+                    <h2>Список обраних порожній</h2>
+                    <p>Ви ще не додали жодного автомобіля до обраних. Почніть додавати автомобілі, які вам подобаються!</p>
+                    <a href="{% url 'main:main' %}" class="btn-primary">
+                        <span class="material-icons">search</span>
+                        Переглянути автомобілі
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

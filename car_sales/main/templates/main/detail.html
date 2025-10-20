@@ -9,9 +9,14 @@
 <div class="car-detail-container">
     <!-- Left Panel - Car Information -->
     <div class="car-info-panel">
-        <button class="favorite-btn">
-            <span class="material-icons">favorite_border</span>
-        </button>
+        <form method="POST" action="{% url 'main:like' car.slug %}" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" class="favorite-btn {% if user in car.likes.all %}liked{% endif %}">
+                <span class="material-icons">
+                    {% if user in car.likes.all %}favorite{% else %}favorite_border{% endif %}
+                </span>
+            </button>
+        </form>
         
         <div class="car-title-info">
             <h1>{{ car.brand }} {{ car.model }} {{ car.year }}</h1>
