@@ -1,5 +1,5 @@
 import datetime
-from .models import CarBrand,CarModel,Cars,CarViews
+from .models import CarBrand,CarModel,Cars,CarViews, Category
 from django.shortcuts import redirect, render
 from django.http import JsonResponse
 from .constants import TYPES,REGIONS,COLORS
@@ -21,6 +21,10 @@ def get_client_ip(request):
     
 
 def main_view(request):
+    types=cache.get('types')
+    if not types:
+        types=list(Category.objects.values_list('id','name'))
+        cache.set('types',types,60*5)
     cars=cache.get('car_list')
     if not cars:
         cars=list(Cars.objects.all().order_by('-id'))
@@ -30,7 +34,7 @@ def main_view(request):
     page_obj=paginator.get_page(page_number)
     brands=CarBrand.objects.all()
 
-    context={'types':TYPES,'regions':REGIONS,'ranges':range(1900,datetime.date.today().year+1),'brands':brands,'colors':COLORS,'page_obj':page_obj}
+    context={'types':types,'regions':REGIONS,'ranges':range(1900,datetime.date.today().year+1),'brands':brands,'colors':COLORS,'page_obj':page_obj}
     return render(request,'main/index.html',context=context)
 
 def get_models(request,slug):

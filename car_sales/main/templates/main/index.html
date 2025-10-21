@@ -21,12 +21,12 @@
                     <div class="filter-group">
                         <div class="dropdown" id="typeDropdown">
                             <button type="button" class="dropdown-button">
-                                <span class="dropdown-text">Легкові</span>
+                                <span class="dropdown-text">Тип машини</span>
                                 <span class="material-icons">expand_more</span>
                             </button>
                             <div class="dropdown-content">
-                                {% for _,type in types %}
-                                    <div class="dropdown-item" data-value="{{ type }}">{{type}}</div>
+                                {% for id,name in types %}
+                                    <div class="dropdown-item" data-value="{{id}}">{{name}}</div>
                                 {% endfor %}
                             </div>
                             <input type="hidden" name="type">

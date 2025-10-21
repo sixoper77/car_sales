@@ -13,8 +13,18 @@ def populate_profile(sender,request,user,**kwargs):
     ).first()
     if social_account:
         data=social_account.extra_data
+        print(data)
+        print(user)
         user.first_name=data.get('given_name','')
-        user.last_name=data.get('family_name','')
+        if not data.get('family_name'):
+            try:
+                user.last_name=' '.join(data.get('given_name').split(' ')[1:])
+                user.username=f'user{user.id}'
+            except:
+                pass
+        else:
+            user.last_name=data.get('family_name','')
+            
         image=data.get('picture')
         if image:
             try:

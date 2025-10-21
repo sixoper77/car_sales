@@ -23,49 +23,44 @@
         {% if page_obj %}
             <div class="cars-grid">
                 {% for car in page_obj %}
-                    <div class="car-card">
-                        <div class="car-image">
-                            <div class="placeholder-image">
-                                {% if car.image %}
-                                    <img src="{{ car.image.url }}" alt="{{ car.brand }} {{ car.model }}" class="card-image">
-                                {% elif car.images.first %}
-                                    <img src="{{ car.images.first.image.url }}" alt="{{ car.brand }} {{ car.model }}" class="card-image">
-                                {% else %}
-                                    <span class="material-icons">directions_car</span>
-                                {% endif %}
-                            </div>
-                            <div class="car-badge favorite-badge">♥ Обране</div>
-                            
-                            <!-- Remove from favorites button -->
-                            <form method="post" action="{% url 'users:del_like' car.slug %}" class="remove-favorite-form">
-                                {% csrf_token %}
-                                <button type="submit" class="remove-favorite-btn" title="Видалити з обраних">
-                                    <span class="material-icons">close</span>
-                                </button>
-                            </form>
+                <div class="car-card">
+                    <div class="car-image">
+                        <div class="placeholder-image">
+                            {% if car.image %}
+                                <img src="{{car.image.url}}" alt="" class="card-image">
+                            {% elif car.images.first %}
+                                <img src="{{car.images.first.image.url}}" alt="" class="card-image">
+                            {% endif %}
                         </div>
-                        <div class="car-info">
-                            <a href="{{ car.get_absolute_url }}">
-                                <h3>{{ car.brand }} {{ car.model }} {{ car.year }}</h3>
-                            </a>
-                            <p class="car-details">
-                                <span class="detail-item">
-                                    <span class="material-icons">palette</span>
-                                    {{ car.color }}
-                                </span>
-                                <span class="detail-item">
-                                    <span class="material-icons">person</span>
-                                    {{ car.owner }}
-                                </span>
-                            </p>
-                            <p class="car-price">${{ car.price|intcomma }}</p>
+                        {% if car.is_sold %}
+                            <div class="car-badge">ПРОДАНО</div>
+                        {% else %}
+                            <div class="car-badge new">АКТИВНЕ</div>
+                        {% endif %}
+                    </div>
+                    <div class="car-info">
+                        <a href="{{ car.get_absolute_url }}">
+                            <h3>{{car.brand}} {{car.model}} {{car.year}}</h3>
+                        </a>
+                        <p class="car-details">{{car.color}} • {{car.mileage|intcomma}} км</p>
+                        <p class="car-price">${{car.price|intcomma}}</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
                             <div class="car-location">
                                 <span class="material-icons">location_on</span>
-                                {{ car.region }}
+                                {{car.region}}
+                            </div>
+                            <div class="car-actions">
+                                <form method="POST" action="{% url 'users:del_like' car.slug %}" style="margin: 0;" onsubmit="return confirm('Ви впевнені, що хочете видалити це оголошення?');">
+                                    {% csrf_token %}
+                                    <button type="submit" class="delete-icon" title="Видалити">
+                                        <span class="material-icons">delete</span>
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>
-                {% endfor %}
+                </div>
+            {% endfor %}
             </div>
 
             <!-- Pagination -->
