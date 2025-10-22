@@ -8,5 +8,5 @@ urlpatterns = [
     path('ads/',views.get_my_ads,name='ads'),
     path('delete/<int:id>/',views.delete_ad,name='delete'),
     path('del_like/<slug:slug>/',views.delete_like,name='del_like'),
-    path('my_choise/',views.get_my_choise,name='my_choise')
+    path('my_choise/',views.get_my_choise,name='my_choise'),
 ]

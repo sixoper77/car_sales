@@ -57,4 +57,5 @@ def delete_like(request,slug):
     car.likes.remove(request.user)
     return redirect('users:my_choise')
     
+
     
