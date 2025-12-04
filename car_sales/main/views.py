@@ -26,6 +26,7 @@ def main_view(request):
         types=list(Category.objects.values_list('id','name'))
         cache.set('types',types,60*5)
     cars=cache.get('car_list')
+    print(cars)
     if not cars:
         cars=list(Cars.objects.all().order_by('-id'))
         cache.set('car_list',cars,60*2)

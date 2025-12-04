@@ -17,10 +17,10 @@
         <div class="sort-options">
             <select class="sort-select" onchange="sortResults(this.value)">
                 <option value="">Сортувати за</option>
-                <option value="price_asc">Ціна: від низької до високої</option>
-                <option value="price_desc">Ціна: від високої до низької</option>
-                <option value="year_desc">Рік: спочатку новіші</option>
-                <option value="year_asc">Рік: спочатку старіші</option>
+                <option value="price" {% if current_ordering == 'price' %}selected{% endif %}>Ціна: від низької до високої</option>
+                <option value="-price" {% if current_ordering == '-price' %}selected{% endif %}>Ціна: від високої до низької</option>
+                <option value="-year" {% if current_ordering == '-year' %}selected{% endif %}>Рік: спочатку новіші</option>
+                <option value="year" {% if current_ordering == 'year' %}selected{% endif %}>Рік: спочатку старіші</option>
             </select>
         </div>
     </div>
@@ -31,7 +31,7 @@
     <div class="container">
         <div class="cars-grid">
             {% for car in page_obj %}
-                {% cache 180 car_new car.id %}
+                {% cache 180 car_use car.id %}
                 <div class="car-card">
                     <div class="car-image">
                         <div class="placeholder-image">
@@ -63,19 +63,41 @@
                 </div>
             {% endfor %}
         </div>
+        
+        <!-- Pagination -->
+        {% if page_obj.paginator.num_pages > 1 %}
         <ul class="pagination">
             <li class="{% if not page_obj.has_previous %}disabled{% endif %}">
-                <a href="{% if page_obj.has_previous %}?page={{ page_obj.previous_page_number }}{% endif %}">Previous</a>
+                <a href="{% if page_obj.has_previous %}?{% if current_ordering %}ordering={{ current_ordering }}&{% endif %}page={{ page_obj.previous_page_number }}{% else %}#{% endif %}">Previous</a>
             </li>
-            {% for page in page_obj.paginator.page_range  %}
-            {% if page >= page_obj.number|add:-2 and page <= page_obj.number|add:2%}
+            {% for page in page_obj.paginator.page_range %}
+                {% if page >= page_obj.number|add:-2 and page <= page_obj.number|add:2 %}
                 <li>
-                    <a href="?page={{page}}"class="{% if page_obj.number == page %}disabled{% endif %}">{{page}}</a>
+                    <a href="?{% if current_ordering %}ordering={{ current_ordering }}&{% endif %}page={{page}}" class="{% if page_obj.number == page %}active{% endif %}">{{page}}</a>
                 </li>
                 {% endif %}
             {% endfor %}
             <li class="{% if not page_obj.has_next %}disabled{% endif %}">
-                <a href="{% if page_obj.has_next %}?page={{page_obj.next_page_number}}{% endif %}">Next</a>
+                <a href="{% if page_obj.has_next %}?{% if current_ordering %}ordering={{ current_ordering }}&{% endif %}page={{page_obj.next_page_number}}{% else %}#{% endif %}">Next</a>
             </li>
         </ul>
-{% endblock %}
+        {% endif %}
+    </div>
+</section>
+
+<script>
+function sortResults(ordering) {
+    if (ordering) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('ordering', ordering);
+        url.searchParams.delete('page'); // Сбрасываем на первую страницу при смене сортировки
+        window.location.href = url.toString();
+    } else {
+        // Если выбран "Сортувати за" (пустое значение), убираем параметр ordering
+        const url = new URL(window.location.href);
+        url.searchParams.delete('ordering');
+        url.searchParams.delete('page');
+        window.location.href = url.toString();
+    }
+}
+</script>

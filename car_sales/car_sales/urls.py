@@ -26,6 +26,7 @@ urlpatterns = [
     path('sale/',include('sale.urls',namespace='sale')),
     path('search/',include('search.urls',namespace='search')),
     path('chat/',include('chat.urls',namespace='chat')),
+
 ]
 
 if settings.DEBUG:
