@@ -53,7 +53,8 @@ def use(request):
     return render(request,'search/use.html',{'page_obj':page_obj})    
 
 def new(request):
-    cars=Cars.objects.filter(used=False).order_by('-id')
+    ordering=request.GET.get("ordering","id")
+    cars=Cars.objects.filter(used=False).order_by(ordering)
     paginator=Paginator(cars,5)
     page_number=request.GET.get('page')
     page_obj=paginator.get_page(page_number)

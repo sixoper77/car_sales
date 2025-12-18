@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -44,3 +45,8 @@ def chats_view(request, user=None):
         'user_last_messages': user_last_messages,
         'chat_user':chat_user
     })
+    
+@login_required
+def find_chat(request):
+    ...
+    

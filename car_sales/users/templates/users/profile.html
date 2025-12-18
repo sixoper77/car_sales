@@ -146,7 +146,7 @@
                 </div>
                 <div class="stat-item">
                     <span class="stat-number">{{ user.date_joined|date:"M Y" }}</span>
-                    <span class="stat-label">З нами з</span>
+                    <span class="stat-label">Дата реєстрації</span>
                 </div>
             </div>
 
@@ -241,22 +241,12 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initProfileFunctionality() {
-    // Image preview
     initImagePreview();
-    
-    // Form validation
     initFormValidation();
-    
-    // Logout confirmation
     initLogoutConfirmation();
-    
-    // Ripple effects
     initRippleEffects();
-    
-    // Input animations
     initInputAnimations();
 }
-
 function initImagePreview() {
     const imageInput = document.getElementById('id_image');
     const avatarPreview = document.getElementById('avatarPreview');
@@ -267,7 +257,6 @@ function initImagePreview() {
         imageInput.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
-                // Validate file size (5MB limit)
                 if (file.size > 5 * 1024 * 1024) {
                     alert('Файл занадто великий. Максимальний розмір 5MB.');
                     this.value = '';
@@ -355,7 +344,7 @@ function initFormValidation() {
                 const saveBtn = document.querySelector('.save-btn');
                 if (saveBtn) {
                     saveBtn.classList.add('loading');
-                    saveBtn.disabled = true;
+                    saveBtn.disabled = true; 
                     saveBtn.innerHTML = '<span class="material-icons spinner">hourglass_empty</span>Збереження...';
                 }
             }

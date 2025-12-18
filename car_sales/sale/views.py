@@ -17,7 +17,6 @@ def add_car(request):
             car.owner=request.user
             car.save()
             car.slug=slugify(f'{car.brand}-{car.model}-{car.id}')
-            car.save(update_fields=['slug'])
             images=request.FILES.getlist('images')
             print(images)
             if len(images)>15:
@@ -30,7 +29,7 @@ def add_car(request):
                 )
                 if ind==0:
                     car.image=image
-                    car.save(update_fields=['image'])
+                    car.save(update_fields=['image','slug'])
             return redirect('main:main')
     else:
         form=AddCarform()
@@ -55,7 +54,6 @@ def update_ad(request,ad):
         if form.is_valid():
             car=form.save(commit=False)
             car.owner=request.user
-            car.save()
             car.slug=slugify(f'{car.brand}-{car.model}-{car.id}')
             car.save() 
             new_images=request.FILES.getlist('images')

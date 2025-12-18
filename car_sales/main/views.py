@@ -19,7 +19,6 @@ def get_client_ip(request):
     return ip
 
     
-
 def main_view(request):
     types=cache.get('types')
     if not types:
@@ -28,7 +27,7 @@ def main_view(request):
     cars=cache.get('car_list')
     print(cars)
     if not cars:
-        cars=list(Cars.objects.all().order_by('-id'))
+        cars=list(Cars.objects.select_related('owner','brand','model','category').prefetch_related('likes').order_by('-id'))
         cache.set('car_list',cars,60*2)
     paginator=Paginator(cars,5)
     page_number=request.GET.get('page')
@@ -40,7 +39,7 @@ def main_view(request):
 
 def get_models(request,slug):
     try:
-        brands=CarBrand.objects.get(slug=slug)
+        brands=CarBrand.objects.prefetch_related('models').get(slug=slug)
         models=brands.models.all()
         data=[{'id':m.id,'models':m.model}for m in models]
         return JsonResponse(data, safe=False)
@@ -48,7 +47,9 @@ def get_models(request,slug):
         return JsonResponse([], safe=False)
     
 def model_detail(request,slug):
-    car=Cars.objects.get(slug=slug)
+    car=Cars.objects.select_related(
+        'owner','category','brand','model'
+        ).prefetch_related('likes').get(slug=slug)
     ip=get_client_ip(request)
     if request.user.is_authenticated:
         exist=CarViews.objects.filter(car=car).filter(

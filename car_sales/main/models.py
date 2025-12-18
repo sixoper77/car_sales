@@ -83,8 +83,8 @@ class Cars(models.Model):
         if self.discount:
             return round(self.price-self.price*self.discount/100,2)
         return self.price
-    def total_likes(self):
-        return self.likes.count()
+    # def total_likes(self):
+    #     return self.likes.count()
 class CarViews(models.Model):
     car=models.ForeignKey(Cars,related_name="views",on_delete=models.CASCADE)
     ip_address=models.GenericIPAddressField(null=True,blank=True)

@@ -1,0 +1,60 @@
+services:
+  web:
+    build:
+      context: ./car_sales
+      dockerfile: Dockerfile
+    image: web:1.0.0
+    command: gunicorn car_sales.wsgi:application --workers 5 --bind 0.0.0.0:8000 --access-logfile '-'
+    volumes:
+      - static_volume:/usr/src/app/staticfiles
+      - media_volume:/usr/src/app/media
+    restart: unless-stopped
+    environment:
+      SECRET_KEY: ${SECRET_KEY}
+      NAME_DATABASE: ${NAME_DATABASE}
+      USER_DATABASE: ${USER_DATABASE}
+      HOST: ${HOST}
+      PASSWORD_DATABASE: ${PASSWORD_DATABASE}
+      PORT: ${PORT}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_SECRET: ${GOOGLE_SECRET}
+    depends_on:
+      - db 
+      - redis
+
+  db:
+    image: postgres:17
+    restart: unless-stopped
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_DB: ${NAME_DATABASE}
+      POSTGRES_USER: ${USER_DATABASE}
+      POSTGRES_PASSWORD: ${PASSWORD_DATABASE}
+  
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "3"
+  
+  nginx:
+    build: ./nginx
+    volumes:
+      - static_volume:/usr/src/app/static
+      - media_volume:/usr/src/app/media
+    depends_on:
+      - web
+    ports:
+     - 80:80
+
+
+volumes:
+  postgres_data:
+  static_volume:
+  media_volume:
