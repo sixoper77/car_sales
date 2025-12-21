@@ -49,3 +49,4 @@ tzlocal==5.3.1
 urllib3==2.5.0
 zope.interface==8.0.1
 gunicorn
+# uvicorn[standard]
