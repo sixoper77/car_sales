@@ -4275,3 +4275,76 @@ input[type="text"]:-moz-autofill {
     font-size: 24px;
     color: #8b7cf8;
 }
+
+
+
+
+/* Контейнер поиска */
+.chat-search {
+    position: relative; /* Важно: якорь для иконок */
+    width: 100%;
+    margin-top: 12px;
+    background: #2a2a2a; /* Твой темный фон */
+    border-radius: 8px;
+    /* Убрали padding у контейнера, отступы будут внутри input */
+}
+
+/* Поле ввода */
+.chat-search input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-size: 14px;
+    /* ВАЖНО: Отступы внутри инпута, чтобы текст не наезжал на иконки */
+    /* Сверху/Снизу 10px, Справа 35px (под крестик), Слева 40px (под лупу) */
+    padding: 10px 35px 10px 40px; 
+}
+
+.chat-search input::placeholder {
+    color: #666;
+}
+
+/* Иконка лупы (слева) */
+.chat-search .search-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%); /* Центрирование по вертикали */
+    color: #888;
+    font-size: 20px;
+    pointer-events: none; /* Чтобы клик проходил сквозь иконку в инпут */
+}
+
+/* Кнопка очистки (крестик справа) */
+.clear-search-btn {
+    position: absolute;
+    right: 8px; /* Прибит к правому краю */
+    top: 50%;
+    transform: translateY(-50%); /* Центрирование по вертикали */
+    
+    display: none; /* Скрыт по умолчанию (JS покажет) */
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 50%;
+    transition: background 0.2s;
+    z-index: 10; /* Чтобы точно был поверх инпута */
+}
+
+.clear-search-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.clear-search-btn .material-icons {
+    color: #888;
+    font-size: 18px;
+}
+
+.clear-search-btn:hover .material-icons {
+    color: #fff;
+}

@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from users.models import User
 from .models import Message
-from django.db.models import Q
+from django.db.models import Q,Subquery,OuterRef
 from django.utils import timezone
 
 @login_required
@@ -48,5 +48,37 @@ def chats_view(request, user=None):
     
 @login_required
 def find_chat(request):
-    ...
+    username = request.GET.get('username', '').strip()
+    if not username:
+        return JsonResponse({'results': []})
+    last_msg_subquery = Message.objects.filter(
+        (Q(sender=request.user) & Q(recipient=OuterRef('pk'))) |
+        (Q(recipient=request.user) & Q(sender=OuterRef('pk')))
+    ).order_by('-timestamp')
+    users = User.objects.filter(
+        username__icontains=username
+    ).filter(
+        Q(sent_message__recipient=request.user) | 
+        Q(recived_message__sender=request.user)
+    ).distinct().annotate(
+        last_msg_body=Subquery(last_msg_subquery.values('body')[:1]),
+        last_msg_time=Subquery(last_msg_subquery.values('timestamp')[:1]),
+        last_msg_sender_id=Subquery(last_msg_subquery.values('sender')[:1])
+    ).order_by('-last_msg_time')
+
+    results = []
+    for usr in users:
+        if not usr.last_msg_time:
+            continue
+
+        results.append({
+            'username': usr.username,
+            'image_url': usr.image.url if usr.image else None,
+            'last_message': usr.last_msg_body,
+            'timestamp': usr.last_msg_time.strftime('%H:%M'),
+            'is_own': usr.last_msg_sender_id == request.user.id, 
+            'chat_url': f'/chat/chat/{usr.username}/'
+        })
+    
+    return JsonResponse({'results': results})
     
