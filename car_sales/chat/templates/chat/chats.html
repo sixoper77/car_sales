@@ -9,7 +9,6 @@
 
 {% block content %}
 <div class="chat-page-container">
-    <!-- Sidebar with chat list -->
     <aside class="chat-sidebar">
         <div class="sidebar-header">
             <h2>Повідомлення</h2>
@@ -26,7 +25,7 @@
             {% if user_last_messages %}
                 {% for item in user_last_messages %}
                     {% if item.last_message %}
-                        <div class="chat-item {% if item.user.username == user %}active{% endif %}" 
+                        <div class="chat-item {% if item.user.username == target_user %}active{% endif %}" 
                              onclick="window.location.href='{% url 'chat:chats' item.user.username %}'">
                             <div class="chat-avatar">
                                 {% if item.user.image %}
@@ -60,27 +59,24 @@
         </div>
     </aside>
 
-    <!-- Chat area -->
     <div class="chat-message-area" id="chatArea">
-        {% if user %}
-            <!-- Chat header -->
+        {% if target_user %}
             <div class="chat-header">
                 <div class="chat-user-info">
                     <div class="chat-user-avatar">
                         {% if chat_user.image %}
                             <img src="{{ chat_user.image.url }}">
                         {% else %}
-                            {{ user|slice:":1"|upper }}
+                            {{ target_user|slice:":1"|upper }}
                         {% endif %}
                     </div>
                     <div class="chat-user-details">
-                        <h3>{{ user }}</h3>
+                        <h3>{{ target_user }}</h3>
                         <span class="chat-user-status">онлайн</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Messages area -->
             <div class="chat-messages-scroll" id="messagesArea">
                 {% for message in chats %}
                     <div class="message {% if message.sender == request.user %}own{% endif %}">
@@ -108,7 +104,6 @@
                 {% endfor %}
             </div>
 
-            <!-- Message input -->
             <div class="message-input-area">
                 <div class="message-input-container">
                     <textarea 
@@ -125,7 +120,6 @@
                 </div>
             </div>
         {% else %}
-            <!-- Empty chat state -->
             <div class="empty-chat-state">
                 <span class="material-icons">forum</span>
                 <h3>Виберіть чат</h3>
@@ -139,10 +133,12 @@
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    {% if user %}
+    // ТУТ БЫЛО user, СТАЛО target_user
+    {% if target_user %}
     // WebSocket connection
     const chatSocket = new WebSocket(
-        'ws://' + window.location.host + '/ws/chat/{{ user }}/'
+        // ТУТ БЫЛО user, СТАЛО target_user
+        'ws://' + window.location.host + '/ws/chat/{{ target_user }}/'
     );
 
     chatSocket.onopen = function(e) {
@@ -243,9 +239,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const chatList = document.getElementById('chatList');
     const clearSearchBtn = document.getElementById('clearSearch');
     let searchTimeout;
-    const originalChatListHTML = chatList.innerHTML; // Зберігаємо оригінальний список
+    const originalChatListHTML = chatList ? chatList.innerHTML : ''; // Added safety check
     
-    if (chatSearch) {
+    if (chatSearch && chatList) { // Added check for chatList existence
         chatSearch.addEventListener('input', function(e) {
             const searchTerm = e.target.value.trim();
             
@@ -289,14 +285,15 @@ document.addEventListener('DOMContentLoaded', function() {
         clearSearchBtn.addEventListener('click', function() {
             chatSearch.value = '';
             clearSearchBtn.style.display = 'none';
-            chatList.innerHTML = originalChatListHTML;
+            if (chatList) chatList.innerHTML = originalChatListHTML;
         });
     }
     
     // Оновлення списку чатів після пошуку
     function updateChatList(results) {
         const chatList = document.getElementById('chatList');
-        
+        if (!chatList) return;
+
         if (results.length === 0) {
             chatList.innerHTML = `
                 <div class="empty-state">
@@ -340,7 +337,7 @@ document.addEventListener('DOMContentLoaded', function() {
         chatList.innerHTML = chatItemsHTML;
     }
     
-    // Escape HTML function
+    // Escape HTML function - redundant but kept if scope issues arise
     function escapeHtml(text) {
         const div = document.createElement('div');
         div.textContent = text;

@@ -39,7 +39,7 @@ def chats_view(request, user=None):
     )
     
     return render(request, 'chat/chats.html', context={
-        'user': user,
+        'target_user': user,
         'chats': chats,
         'users': users,
         'user_last_messages': user_last_messages,
