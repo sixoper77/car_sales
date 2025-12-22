@@ -6,34 +6,37 @@ from django.contrib.auth.decorators import login_required
 from . forms import AddCarform
 from django.utils.text import slugify
 from django.contrib import messages
+from django.core.files.base import ContentFile
 
 @login_required
 def add_car(request):
-    print(request)
-    if request.method=='POST':
-        form=AddCarform(request.POST)
+    if request.method == 'POST':
+        form = AddCarform(request.POST, request.FILES)
         if form.is_valid():
-            car=form.save(commit=False)
-            car.owner=request.user
+            car = form.save(commit=False)
+            car.owner = request.user
+            images = request.FILES.getlist('images')[:15]
             car.save()
-            car.slug=slugify(f'{car.brand}-{car.model}-{car.id}')
-            images=request.FILES.getlist('images')
-            print(images)
-            if len(images)>15:
-                images=images[:15]
-            for ind , image in enumerate(images):
-                print(f'Сохраняю фото:{ind+1}')
+            if images:
+                first_image = images[0]
+                car.image.save(
+                    first_image.name,
+                    ContentFile(first_image.read()),
+                    save=True
+                )
+                first_image.seek(0) 
+            for image in images:
+                image.seek(0) 
                 CarImage.objects.create(
                     car=car,
-                    image=image
+                    image=ContentFile(image.read(), name=image.name)
                 )
-                if ind==0:
-                    car.image=image
-                    car.save(update_fields=['image','slug'])
+            car.slug = slugify(f'{car.brand}-{car.model}-{car.id}')
+            car.save(update_fields=['slug'])
             return redirect('main:main')
     else:
-        form=AddCarform()
-    return render(request,'sale/sale.html',context={'form':form,'ranges':range(1900,datetime.date.today().year+1)})
+        form = AddCarform()
+    return render(request, 'sale/sale.html', context={'form': form, 'ranges': range(1900, datetime.date.today().year + 1)})
 
 
 
